@@ -1,5 +1,6 @@
 import MovieCard from "./MovieCard";
 import MovieSkeleton, { MovieGridSkeleton } from "./MovieSkeleton";
+import Pagination from "../shared/Pagination";
 import { useI18n } from "../../context/I18nContext";
 
 export default function MovieGrid({
@@ -41,26 +42,8 @@ export default function MovieGrid({
           Array.from({ length: 6 }).map((_, i) => <MovieSkeleton key={`sk-${i}`} />)}
       </div>
 
-      {scrollMode === "pagination" && totalPages > 1 && (
-        <div className="flex items-center justify-center gap-4">
-          <button
-            disabled={page <= 1}
-            onClick={() => onPageChange(page - 1)}
-            className="px-4 py-2 rounded-lg bg-white/5 text-white disabled:opacity-30 hover:bg-white/10 transition-all"
-          >
-            {t("prev")}
-          </button>
-          <span className="text-gray-400 text-sm">
-            {t("page")} {page} / {totalPages}
-          </span>
-          <button
-            disabled={page >= totalPages}
-            onClick={() => onPageChange(page + 1)}
-            className="px-4 py-2 rounded-lg bg-white/5 text-white disabled:opacity-30 hover:bg-white/10 transition-all"
-          >
-            {t("next")}
-          </button>
-        </div>
+      {scrollMode === "pagination" && (
+        <Pagination page={page} totalPages={totalPages} onPageChange={onPageChange} />
       )}
     </div>
   );
