@@ -43,6 +43,10 @@ const router = createBrowserRouter([
         path: "wishlist",
         element: <Wishlist />,
       },
+      {
+        path: "*",
+        element: <NotFound />,
+      },
     ],
   },
 ]);
