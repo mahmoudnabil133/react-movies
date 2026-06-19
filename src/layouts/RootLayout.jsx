@@ -1,18 +1,13 @@
-import { Outlet, NavLink } from "react-router";
+import { Outlet } from "react-router";
 import Navbar from "../components/Navbar/Navbar";
 
 export default function RootLayout() {
   return (
-    <div>
-      <nav>
-        <Navbar/>
-      </nav>
-
-      <main>
-        <Outlet /> {/* child pages render here */}
+    <div className="dark min-h-screen bg-[#0b1220]">
+      <Navbar />
+      <main className="pt-[72px]">
+        <Outlet />
       </main>
-
-      {/* <footer>My App © 2025</footer> */}
     </div>
   );
 }
