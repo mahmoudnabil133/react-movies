@@ -40,6 +40,10 @@ const translations = {
     filters: "Filters",
     resultsFor: "Results for",
     noReviews: "No reviews yet",
+    sceneNotFound: "Scene Not Found",
+    wrongTurn: "This page took a wrong turn at the credits.",
+    backToHome: "Back to Homepage",
+    browseMovies: "Browse Movies",
   },
   ar: {
     home: "الرئيسية",
@@ -79,6 +83,10 @@ const translations = {
     filters: "تصفية",
     resultsFor: "نتائج البحث عن",
     noReviews: "لا توجد مراجعات",
+    sceneNotFound: "المشهد غير موجود",
+    wrongTurn: "هذه الصفحة أخذت منعطفاً خاطئاً عند الشارة.",
+    backToHome: "العودة للرئيسية",
+    browseMovies: "تصفح الأفلام",
   },
   fr: {
     home: "Accueil",
@@ -118,6 +126,10 @@ const translations = {
     filters: "Filtres",
     resultsFor: "Résultats pour",
     noReviews: "Pas encore d'avis",
+    sceneNotFound: "Scène introuvable",
+    wrongTurn: "Cette page a pris un mauvais virage au générique.",
+    backToHome: "Retour à l'accueil",
+    browseMovies: "Parcourir les films",
   },
 };
 
