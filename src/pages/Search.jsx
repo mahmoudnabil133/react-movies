@@ -1,47 +1,45 @@
 import { useState, useEffect, useCallback } from "react";
-import { MOVIE_TABS, SORT_OPTIONS } from "../lib/constants";
-import { fetchMoviesByCategory, discoverMovies, fetchGenres, fetchMovieVideos } from "../api/tmdb";
+import { useSearchParams } from "react-router";
+import { searchMovies, fetchGenres, discoverMovies } from "../api/tmdb";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
 import { useI18n } from "../context/I18nContext";
-import HeroBanner from "../components/movies/HeroBanner";
-import TabBar from "../components/movies/TabBar";
+import { SORT_OPTIONS } from "../lib/constants";
+import SearchBar from "../components/search/SearchBar";
 import MovieFilters from "../components/movies/MovieFilters";
 import MovieGrid from "../components/movies/MovieGrid";
-import TrailerModal from "../components/shared/TrailerModal";
 
-export default function Home() {
+export default function Search() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("q") || "";
   const { t } = useI18n();
-  const [activeTab, setActiveTab] = useState("now_playing");
+
   const [movies, setMovies] = useState([]);
-  const [heroMovie, setHeroMovie] = useState(null);
-  const [genres, setGenres] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [scrollMode, setScrollMode] = useState("infinite");
+  const [scrollMode, setScrollMode] = useState("pagination");
+  const [genres, setGenres] = useState([]);
 
   const [selectedGenre, setSelectedGenre] = useState("");
   const [sortBy, setSortBy] = useState("popularity.desc");
   const [yearFrom, setYearFrom] = useState("");
   const [yearTo, setYearTo] = useState("");
 
-  const [trailerKey, setTrailerKey] = useState(null);
-  const [showTrailer, setShowTrailer] = useState(false);
-
-  const hasFilters = selectedGenre || yearFrom || yearTo || sortBy !== "popularity.desc";
-
   useEffect(() => {
     fetchGenres().then((data) => setGenres(data.genres || [])).catch(console.error);
-    fetchMoviesByCategory("now_playing", 1)
-      .then((data) => setHeroMovie(data.results?.[0] || null))
-      .catch(console.error);
   }, []);
 
-  const loadMovies = useCallback(
+  const loadResults = useCallback(
     async (pageNum, append = false) => {
+      if (!query.trim()) {
+        setMovies([]);
+        return;
+      }
       setLoading(true);
       try {
         let data;
+        const hasFilters = selectedGenre || yearFrom || yearTo || sortBy !== "popularity.desc";
+
         if (hasFilters) {
           data = await discoverMovies({
             page: pageNum,
@@ -50,8 +48,13 @@ export default function Home() {
             yearFrom,
             yearTo,
           });
+          if (query) {
+            data.results = data.results?.filter((m) =>
+              m.title?.toLowerCase().includes(query.toLowerCase())
+            );
+          }
         } else {
-          data = await fetchMoviesByCategory(activeTab, pageNum);
+          data = await searchMovies(query, pageNum);
         }
 
         setMovies((prev) => (append ? [...prev, ...(data.results || [])] : data.results || []));
@@ -63,41 +66,23 @@ export default function Home() {
         setLoading(false);
       }
     },
-    [activeTab, hasFilters, selectedGenre, sortBy, yearFrom, yearTo]
+    [query, selectedGenre, sortBy, yearFrom, yearTo]
   );
 
   useEffect(() => {
     setPage(1);
-    loadMovies(1, false);
-  }, [activeTab, selectedGenre, sortBy, yearFrom, yearTo]);
+    loadResults(1, false);
+  }, [query, selectedGenre, sortBy, yearFrom, yearTo, scrollMode]);
 
   const loadMore = useCallback(() => {
-    if (!loading && page < totalPages) {
-      loadMovies(page + 1, true);
-    }
-  }, [loading, page, totalPages, loadMovies]);
+    if (!loading && page < totalPages) loadResults(page + 1, true);
+  }, [loading, page, totalPages, loadResults]);
 
   const lastElementRef = useInfiniteScroll(
     loadMore,
     scrollMode === "infinite" && page < totalPages,
     loading
   );
-
-  const handleTrailerClick = async () => {
-    if (!heroMovie) return;
-    try {
-      const data = await fetchMovieVideos(heroMovie.id);
-      const trailer = data.results?.find(
-        (v) => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")
-      );
-      if (trailer) {
-        setTrailerKey(trailer.key);
-        setShowTrailer(true);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const sortOptions = SORT_OPTIONS.map((opt) => ({
     ...opt,
@@ -109,11 +94,17 @@ export default function Home() {
   }));
 
   return (
-    <div className="min-h-screen bg-[#0b1220]">
-      <HeroBanner movie={heroMovie} onTrailerClick={handleTrailerClick} />
+    <div className="min-h-screen bg-[#0b1220] pb-16">
+      <div className="max-w-7xl mx-auto px-4 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <SearchBar initialQuery={query} autoFocus showSuggestions />
+        </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
-        <TabBar tabs={MOVIE_TABS} activeTab={activeTab} onTabChange={setActiveTab} />
+        {query && (
+          <h1 className="text-2xl font-bold text-white">
+            {t("resultsFor")} <span className="text-blue-400">"{query}"</span>
+          </h1>
+        )}
 
         <MovieFilters
           genres={genres}
@@ -137,13 +128,9 @@ export default function Home() {
           scrollMode={scrollMode}
           page={page}
           totalPages={totalPages}
-          onPageChange={(p) => loadMovies(p, false)}
+          onPageChange={(p) => loadResults(p, false)}
         />
       </div>
-
-      {showTrailer && (
-        <TrailerModal videoKey={trailerKey} onClose={() => setShowTrailer(false)} />
-      )}
     </div>
   );
 }

@@ -1,0 +1,21 @@
+export default function MovieSkeleton() {
+  return (
+    <div className="rounded-xl overflow-hidden bg-[#141b2d] border border-white/5 animate-pulse">
+      <div className="aspect-[2/3] bg-gradient-to-br from-[#1a2235] to-[#0f1520]" />
+      <div className="p-3 space-y-2">
+        <div className="h-4 bg-[#1a2235] rounded w-3/4" />
+        <div className="h-3 bg-[#1a2235] rounded w-1/3" />
+      </div>
+    </div>
+  );
+}
+
+export function MovieGridSkeleton({ count = 12 }) {
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+      {Array.from({ length: count }).map((_, i) => (
+        <MovieSkeleton key={i} />
+      ))}
+    </div>
+  );
+}
