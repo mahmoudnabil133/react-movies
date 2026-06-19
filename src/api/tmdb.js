@@ -1,4 +1,4 @@
-import { TMDB_API_KEY, TMDB_BASE_URL } from "./constants";
+import { TMDB_API_KEY, TMDB_BASE_URL } from "../lib/constants";
 
 const cache = new Map();
 const CACHE_TTL = 5 * 60 * 1000;
