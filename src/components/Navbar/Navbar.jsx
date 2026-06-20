@@ -2,10 +2,12 @@ import { Link } from "react-router";
 import SearchBar from "../search/SearchBar";
 import { useI18n } from "../../context/I18nContext";
 import { useWishlist } from "../../context/WishlistContext";
+import { useAuth } from "../../context/AuthContext";
 
 const Navbar = () => {
   const { t, lang, setLang, languages } = useI18n();
   const { wishlist } = useWishlist();
+  const { user, logout } = useAuth();
 
   return (
     <nav className="fixed top-0 start-0 w-full z-50 bg-[#0b1220]/90 backdrop-blur-md border-b border-blue-500/20">
@@ -58,6 +60,36 @@ const Navbar = () => {
               </option>
             ))}
           </select>
+
+          {user ? (
+            <>
+              <span className="hidden sm:inline text-sm text-white/80">
+                {user.name || user.email || t("account")}
+              </span>
+              <button
+                type="button"
+                onClick={logout}
+                className="px-3 py-1.5 rounded-lg bg-red-500/15 text-red-300 border border-red-500/20 text-sm hover:bg-red-500/20 transition"
+              >
+                {t("logout") || "Logout"}
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="px-3 py-1.5 rounded-lg bg-white/10 text-white text-sm hover:bg-white/20 transition"
+              >
+                {t("login") || "Login"}
+              </Link>
+              <Link
+                to="/signup"
+                className="px-3 py-1.5 rounded-lg bg-blue-500 text-white text-sm hover:bg-blue-400 transition"
+              >
+                {t("signup") || "Sign Up"}
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>
