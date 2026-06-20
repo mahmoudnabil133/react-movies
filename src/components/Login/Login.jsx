@@ -15,9 +15,17 @@ import {
   FieldDescription,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router";
+import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 export function Login({ className, ...props }) {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   return (
     <div
       className={cn(
@@ -46,13 +54,30 @@ export function Login({ className, ...props }) {
         </CardHeader>
 
         <CardContent>
-          <form className="space-y-5">
+          <form
+            className="space-y-5"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setLoading(true);
+              setError(null);
+              try {
+                await login(email, password);
+                navigate("/");
+              } catch (err) {
+                setError(err.message || "Login failed");
+              } finally {
+                setLoading(false);
+              }
+            }}
+          >
             <FieldGroup>
               {/* Email */}
               <Field>
                 <FieldLabel className="text-white">Email</FieldLabel>
                 <Input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="m@example.com"
                   className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-blue-400"
                 />
@@ -69,15 +94,19 @@ export function Login({ className, ...props }) {
 
                 <Input
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="bg-white/10 border-white/20 text-white focus-visible:ring-blue-400"
                 />
               </Field>
 
               {/* Buttons */}
               <Field>
-                <Button className="w-full bg-blue-500 hover:bg-blue-600 transition-all">
-                  Login
+                <Button type="submit" disabled={loading} className="w-full bg-blue-500 hover:bg-blue-600 transition-all">
+                  {loading ? "Logging in..." : "Login"}
                 </Button>
+
+                {error && <div className="text-red-400 text-sm mt-2">{error}</div>}
 
                 <Button
                   variant="outline"
