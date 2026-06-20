@@ -1,4 +1,4 @@
-import "./signup.css";
+import "./Signup.css";
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,9 +15,19 @@ import {
   FieldDescription,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router";
+import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 export function Signup({ className, ...props }) {
+  const navigate = useNavigate();
+  const { register } = useAuth();
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   return (
     <div
       className={cn(
@@ -46,22 +56,41 @@ export function Signup({ className, ...props }) {
         </CardHeader>
 
         <CardContent>
-          <form className="space-y-2">
+          <form
+            className="space-y-2"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setLoading(true);
+              setError(null);
+              try {
+                await register({ name, phone, email, password });
+                navigate("/");
+              } catch (err) {
+                setError(err.message || "Registration failed");
+              } finally {
+                setLoading(false);
+              }
+            }}
+          >
             <FieldGroup className="gap-3">
-            {/* Name */}
+              {/* Name */}
               <Field>
                 <FieldLabel className="text-white">Name</FieldLabel>
                 <Input
-                  type="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   placeholder="lorem ipsum"
                   className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-blue-400"
                 />
               </Field>
-               {/* Phone */}
+              {/* Phone */}
               <Field>
                 <FieldLabel className="text-white">Phone</FieldLabel>
                 <Input
-                  type="phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                   placeholder="+20 0000 000 000"
                   className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-blue-400"
                 />
@@ -71,6 +100,8 @@ export function Signup({ className, ...props }) {
                 <FieldLabel className="text-white">Email</FieldLabel>
                 <Input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="m@example.com"
                   className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-blue-400"
                 />
@@ -87,15 +118,19 @@ export function Signup({ className, ...props }) {
 
                 <Input
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="bg-white/10 border-white/20 text-white focus-visible:ring-blue-400"
                 />
               </Field>
 
               {/* Buttons */}
               <Field>
-                <Button className="w-full bg-blue-500 hover:bg-blue-600 transition-all">
-                  Sign Up
+                <Button type="submit" disabled={loading} className="w-full bg-blue-500 hover:bg-blue-600 transition-all">
+                  {loading ? "Signing up..." : "Sign Up"}
                 </Button>
+
+                {error && <div className="text-red-400 text-sm mt-2">{error}</div>}
 
                 <Button
                   variant="outline"
