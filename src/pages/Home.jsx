@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { MOVIE_TABS, SORT_OPTIONS } from "../lib/constants";
-import { fetchMoviesByCategory, discoverMovies, fetchGenres, fetchMovieVideos } from "../api/tmdb";
+import { fetchMoviesByCategory, discoverMovies, fetchGenres, fetchMovieVideos, fetchTrending } from "../api/tmdb";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
 import { useI18n } from "../context/I18nContext";
-import HeroBanner from "../components/movies/HeroBanner";
+import TrendingSlider from "../components/movies/TrendingSlider";
 import TabBar from "../components/movies/TabBar";
 import MovieFilters from "../components/movies/MovieFilters";
 import MovieGrid from "../components/movies/MovieGrid";
@@ -25,6 +25,7 @@ export default function Home() {
   const [yearFrom, setYearFrom] = useState("");
   const [yearTo, setYearTo] = useState("");
 
+  const [trendingMovies, setTrendingMovies] = useState([]);
   const [trailerKey, setTrailerKey] = useState(null);
   const [showTrailer, setShowTrailer] = useState(false);
 
@@ -32,9 +33,10 @@ export default function Home() {
 
   useEffect(() => {
     fetchGenres().then((data) => setGenres(data.genres || [])).catch(console.error);
-    fetchMoviesByCategory("now_playing", 1)
-      .then((data) => setHeroMovie(data.results?.[0] || null))
-      .catch(console.error);
+    fetchTrending("week").then((data) => {
+      setTrendingMovies(data.results || []);
+      setHeroMovie(data.results?.[0] || null);
+    }).catch(console.error);
   }, []);
 
   const loadMovies = useCallback(
@@ -83,10 +85,11 @@ export default function Home() {
     loading
   );
 
-  const handleTrailerClick = async () => {
-    if (!heroMovie) return;
+  const handleTrailerClick = async (movieId) => {
+    const id = movieId || heroMovie?.id;
+    if (!id) return;
     try {
-      const data = await fetchMovieVideos(heroMovie.id);
+      const data = await fetchMovieVideos(id);
       const trailer = data.results?.find(
         (v) => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")
       );
@@ -110,7 +113,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#0b1220]">
-      <HeroBanner movie={heroMovie} onTrailerClick={handleTrailerClick} />
+      <TrendingSlider movies={trendingMovies} onTrailerClick={handleTrailerClick} />
 
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
         <TabBar tabs={MOVIE_TABS} activeTab={activeTab} onTabChange={setActiveTab} />

@@ -45,6 +45,10 @@ export function discoverMovies({ page = 1, genre, sortBy, yearFrom, yearTo } = {
   return fetchTMDB("/discover/movie", params);
 }
 
+export function fetchTrending(timeWindow = "week", page = 1) {
+  return fetchTMDB(`/trending/movie/${timeWindow}`, { page, language: "en-US" });
+}
+
 export function fetchGenres() {
   return fetchTMDB("/genre/movie/list", { language: "en-US" });
 }
