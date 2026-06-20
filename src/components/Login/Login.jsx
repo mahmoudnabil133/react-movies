@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input"
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { toast } from "../../lib/toast";
 
 export function Login({ className, ...props }) {
   const navigate = useNavigate();
@@ -62,9 +63,11 @@ export function Login({ className, ...props }) {
               setError(null);
               try {
                 await login(email, password);
+                toast.success("Welcome back!");
                 navigate("/");
               } catch (err) {
                 setError(err.message || "Login failed");
+                toast.error(err.message || "Login failed");
               } finally {
                 setLoading(false);
               }
@@ -79,7 +82,7 @@ export function Login({ className, ...props }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="m@example.com"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-blue-400"
+                  className="bg-white text-gray-900 placeholder-gray-400 border-white/20 focus-visible:ring-blue-400"
                 />
               </Field>
 
@@ -96,13 +99,13 @@ export function Login({ className, ...props }) {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-white/10 border-white/20 text-white focus-visible:ring-blue-400"
+                  className="bg-white text-gray-900 border-white/20 focus-visible:ring-blue-400"
                 />
               </Field>
 
               {/* Buttons */}
               <Field>
-                <Button type="submit" disabled={loading} className="w-full bg-blue-500 hover:bg-blue-600 transition-all">
+                <Button type="submit" disabled={loading} className="w-full">
                   {loading ? "Logging in..." : "Login"}
                 </Button>
 
@@ -111,7 +114,7 @@ export function Login({ className, ...props }) {
                 <Button
                   variant="outline"
                   type="button"
-                  className="w-full mt-2 border-white/30 text-white hover:bg-white/10"
+                  className="w-full mt-2 border-white/30 text-foreground hover:bg-accent"
                 >
                   Continue with Google
                 </Button>

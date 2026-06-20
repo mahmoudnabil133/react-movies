@@ -70,11 +70,11 @@ export default function SearchBar({ initialQuery = "", autoFocus = false, showSu
           onFocus={() => setOpen(true)}
           placeholder={t("searchPlaceholder")}
           autoFocus={autoFocus}
-          className="flex-1 px-4 py-2 rounded-lg bg-white/5 border border-blue-500/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+          className="flex-1 px-4 py-2 rounded-lg bg-muted border border-blue-500/20 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
         />
         <button
           type="submit"
-          className="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition shadow-md shrink-0"
+          className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/80 transition shadow-md shrink-0"
         >
           {t("search")}
         </button>

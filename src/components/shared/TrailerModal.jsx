@@ -18,7 +18,7 @@ export default function TrailerModal({ videoKey, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/85 backdrop-blur-sm animate-fade-in"
       onClick={onClose}
     >
       <div
@@ -27,7 +27,7 @@ export default function TrailerModal({ videoKey, onClose }) {
       >
         <button
           onClick={onClose}
-          className="absolute -top-12 end-0 text-white hover:text-gray-300 text-sm font-medium transition-colors"
+          className="absolute -top-12 end-0 text-foreground hover:text-muted-foreground text-sm font-medium transition-colors"
         >
           ✕ {t("close")}
         </button>

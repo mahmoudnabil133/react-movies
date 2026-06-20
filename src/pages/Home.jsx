@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { toast } from "../lib/toast";
 import { MOVIE_TABS, SORT_OPTIONS } from "../lib/constants";
 import { fetchMoviesByCategory, discoverMovies, fetchGenres, fetchMovieVideos, fetchTrending } from "../api/tmdb";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
@@ -96,9 +97,11 @@ export default function Home() {
       if (trailer) {
         setTrailerKey(trailer.key);
         setShowTrailer(true);
+      } else {
+        toast.error("No trailer available for this movie.");
       }
     } catch (err) {
-      console.error(err);
+      toast.error("Failed to load trailer.");
     }
   };
 
@@ -112,7 +115,7 @@ export default function Home() {
   }));
 
   return (
-    <div className="min-h-screen bg-[#0b1220]">
+    <div className="min-h-screen bg-background">
       <TrendingSlider movies={trendingMovies} onTrailerClick={handleTrailerClick} />
 
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">

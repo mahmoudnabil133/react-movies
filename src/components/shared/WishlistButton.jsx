@@ -2,6 +2,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 import { useWishlist } from "../../context/WishlistContext";
 import { useI18n } from "../../context/I18nContext";
+import { toast } from "../../lib/toast";
 
 export default function WishlistButton({ movie, variant = "default" }) {
   const { user } = useAuth();
@@ -26,10 +27,10 @@ export default function WishlistButton({ movie, variant = "default" }) {
     variant === "hero"
       ? active
         ? "bg-red-500/20 border-red-500/50 text-red-400"
-        : "bg-white/10 border-white/10 text-white hover:bg-white/20"
+        : "bg-muted border-border text-foreground hover:bg-accent"
       : active
         ? "bg-red-500/20 text-red-400 border border-red-500/30"
-        : "bg-black/50 text-white border border-white/10 hover:bg-white/10";
+        : "bg-background/50 text-foreground border border-border hover:bg-accent";
 
   const blockedClasses = isBlocked ? "opacity-60 cursor-not-allowed" : "";
 
@@ -37,18 +38,24 @@ export default function WishlistButton({ movie, variant = "default" }) {
     e.preventDefault();
     e.stopPropagation();
     if (isBlocked) {
-      setBlockedMessage("Login to save more than 2 wishlist items.");
+      toast.error("Login to save more than 2 wishlist items.");
       return;
     }
     setBlockedMessage("");
 
     try {
       const success = await toggleWishlist(movie);
-      if (!success) {
-        setBlockedMessage("Login to save more than 2 wishlist items.");
+      if (success) {
+        if (active) {
+          toast.success(`"${movie.title}" removed from wishlist`);
+        } else {
+          toast.success(`"${movie.title}" added to wishlist`);
+        }
+      } else {
+        toast.error("Login to save more than 2 wishlist items.");
       }
     } catch (err) {
-      setBlockedMessage(err?.message || "Unable to update wishlist.");
+      toast.error(err?.message || "Unable to update wishlist.");
     }
   };
 

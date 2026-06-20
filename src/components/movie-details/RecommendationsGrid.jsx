@@ -7,7 +7,7 @@ export default function RecommendationsGrid({ movies = [] }) {
 
   return (
     <section className="space-y-4">
-      <h2 className="text-xl font-bold text-white border-b border-white/10 pb-3">
+      <h2 className="text-xl font-bold text-foreground border-b border-border pb-3">
         {t("recommendations")}
       </h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
