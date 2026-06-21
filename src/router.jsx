@@ -8,6 +8,7 @@ import SignupPage from "./pages/SignupPage.jsx";
 import MovieDetails from "./pages/MovieDetails.jsx";
 import Search from "./pages/Search.jsx";
 import Wishlist from "./pages/Wishlist.jsx";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -41,7 +42,11 @@ const router = createBrowserRouter([
       },
       {
         path: "wishlist",
-        element: <Wishlist />,
+        element: (
+          <ProtectedRoute>
+            <Wishlist />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "*",

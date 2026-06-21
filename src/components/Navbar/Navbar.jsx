@@ -45,16 +45,18 @@ const Navbar = () => {
         <ul className="hidden lg:flex items-center gap-6">
           <NavLink to="/" active={pathname === "/"}>{t("home")}</NavLink>
           <NavLink to="/search" active={pathname === "/search"}>{t("movies")}</NavLink>
-          <NavLink to="/wishlist" active={pathname === "/wishlist"}>
-            <span className="flex items-center gap-1.5">
-              {t("wishlist")}
-              {wishlist.length > 0 && (
-                <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full border border-border/50 text-foreground tabular-nums leading-none">
-                  {wishlist.length}
-                </span>
-              )}
-            </span>
-          </NavLink>
+          {user && (
+            <NavLink to="/wishlist" active={pathname === "/wishlist"}>
+              <span className="flex items-center gap-1.5">
+                {t("wishlist")}
+                {wishlist.length > 0 && (
+                  <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full border border-border/50 text-foreground tabular-nums leading-none">
+                    {wishlist.length}
+                  </span>
+                )}
+              </span>
+            </NavLink>
+          )}
         </ul>
 
         <div className="hidden md:block flex-1 max-w-md mx-auto">

@@ -37,6 +37,13 @@ export default function WishlistButton({ movie, variant = "default" }) {
   const handleClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    // Check if user is trying to add to wishlist without being logged in
+    if (!user && !active) {
+      toast.error("Please login to add movies to your wishlist");
+      return;
+    }
+
     if (isBlocked) {
       toast.error("Login to save more than 2 wishlist items.");
       return;
