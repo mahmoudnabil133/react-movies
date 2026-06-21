@@ -69,10 +69,11 @@ export default function Home() {
     [activeTab, hasFilters, selectedGenre, sortBy, yearFrom, yearTo]
   );
 
+  // Load movies on mount and when filters/tab change
   useEffect(() => {
     setPage(1);
     loadMovies(1, false);
-  }, [activeTab, selectedGenre, sortBy, yearFrom, yearTo]);
+  }, [loadMovies]);
 
   const loadMore = useCallback(() => {
     if (!loading && page < totalPages) {

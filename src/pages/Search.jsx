@@ -94,7 +94,7 @@ export default function Search() {
   }));
 
   return (
-    <div className="min-h-screen bg-background pb-16">
+    <div className="min-h-screen bg-background pb-16 m-5">
       <div className="max-w-7xl mx-auto px-4 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           <SearchBar initialQuery={query} autoFocus showSuggestions />
