@@ -69,7 +69,7 @@ const Navbar = () => {
               className="appearance-none px-2.5 py-1.5 pr-6 rounded-lg border border-border/50 text-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all cursor-pointer"
             >
               {languages.map((l) => (
-                <option key={l.code} value={l.code} className="text-foreground">
+                <option key={l.code} value={l.code} className="text-foreground bg-background">
                   {l.label}
                 </option>
               ))}
