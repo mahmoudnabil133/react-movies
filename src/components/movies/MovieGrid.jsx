@@ -27,8 +27,8 @@ export default function MovieGrid({
   }
 
   return (
-    <div className="space-y-8 m-5">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+    <div className="space-y-6 sm:space-y-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
         {movies.map((movie, index) => {
           const isLast = index === movies.length - 1;
           return (

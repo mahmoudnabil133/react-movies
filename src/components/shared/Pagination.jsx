@@ -37,19 +37,42 @@ export default function Pagination({ page, totalPages, onPageChange }) {
   const pages = getPageRange(page, totalPages);
 
   return (
-    <nav
-      aria-label="Pagination"
-      className="flex items-center justify-center"
-    >
-      <div className="inline-flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-2.5 rounded-full bg-[#1a1f2e] border border-border shadow-lg">
+    <nav aria-label="Pagination" className="flex items-center justify-center px-2">
+      {/* Compact mobile pagination */}
+      <div className="flex sm:hidden items-center gap-3 w-full max-w-xs justify-between px-4 py-2.5 rounded-full bg-card border border-border shadow-lg">
         <button
           type="button"
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
-          className="flex items-center gap-1 px-2 sm:px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-muted-foreground transition-colors"
+          className="flex items-center justify-center w-9 h-9 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          aria-label={t("prev")}
+        >
+          &lt;
+        </button>
+        <span className="text-sm font-medium text-foreground tabular-nums">
+          {t("page")} {page} / {totalPages}
+        </span>
+        <button
+          type="button"
+          disabled={page >= totalPages}
+          onClick={() => onPageChange(page + 1)}
+          className="flex items-center justify-center w-9 h-9 rounded-lg text-foreground hover:text-teal-400 hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          aria-label={t("next")}
+        >
+          &gt;
+        </button>
+      </div>
+
+      {/* Full pagination on sm+ */}
+      <div className="hidden sm:inline-flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-2.5 rounded-full bg-card border border-border shadow-lg max-w-full overflow-x-auto scrollbar-hide">
+        <button
+          type="button"
+          disabled={page <= 1}
+          onClick={() => onPageChange(page - 1)}
+          className="flex items-center gap-1 px-2 sm:px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-muted-foreground transition-colors shrink-0"
         >
           <span aria-hidden="true">&lt;</span>
-          <span className="hidden sm:inline">{t("prev")}</span>
+          <span className="hidden md:inline">{t("prev")}</span>
         </button>
 
         <div className="flex items-center gap-1 mx-1 sm:mx-2">
@@ -57,7 +80,7 @@ export default function Pagination({ page, totalPages, onPageChange }) {
             item === "..." ? (
               <span
                 key={`dots-${index}`}
-                className="px-2 py-1 text-sm text-muted-foreground select-none"
+                className="px-1.5 py-1 text-sm text-muted-foreground select-none"
               >
                 …
               </span>
@@ -67,7 +90,7 @@ export default function Pagination({ page, totalPages, onPageChange }) {
                 type="button"
                 onClick={() => onPageChange(item)}
                 aria-current={page === item ? "page" : undefined}
-                className={`min-w-[2.25rem] h-9 px-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                className={`min-w-[2rem] sm:min-w-[2.25rem] h-8 sm:h-9 px-1.5 sm:px-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
                   page === item
                     ? "bg-teal-500 text-black shadow-md shadow-teal-500/30"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent"
@@ -83,9 +106,9 @@ export default function Pagination({ page, totalPages, onPageChange }) {
           type="button"
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
-          className="flex items-center gap-1 px-2 sm:px-3 py-1.5 text-sm font-medium text-foreground hover:text-teal-400 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-foreground transition-colors"
+          className="flex items-center gap-1 px-2 sm:px-3 py-1.5 text-sm font-medium text-foreground hover:text-teal-400 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-foreground transition-colors shrink-0"
         >
-          <span className="hidden sm:inline">{t("next")}</span>
+          <span className="hidden md:inline">{t("next")}</span>
           <span aria-hidden="true">&gt;</span>
         </button>
       </div>

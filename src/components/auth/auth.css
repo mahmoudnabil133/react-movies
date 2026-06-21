@@ -71,7 +71,17 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .auth-page {
+    padding: 2rem 1rem;
+  }
+
+  .auth-card .relative {
+    padding: 2.5rem;
+  }
 }
 
 .auth-orb {

@@ -55,7 +55,7 @@ export default function MovieDetails() {
     <div className="min-h-screen bg-background pb-16">
       <MovieHero movie={movie} onTrailerClick={handleTrailerClick} />
 
-      <div className="max-w-7xl mx-auto px-4 py-10 space-y-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-8 sm:space-y-12">
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-foreground border-b border-border pb-3">
             {t("overview")}

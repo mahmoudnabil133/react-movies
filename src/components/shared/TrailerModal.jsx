@@ -18,26 +18,28 @@ export default function TrailerModal({ videoKey, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/85 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-background/85 backdrop-blur-sm animate-fade-in"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-4xl aspect-video rounded-xl overflow-hidden shadow-2xl"
+        className="relative w-full max-w-4xl rounded-xl overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute -top-12 end-0 text-foreground hover:text-muted-foreground text-sm font-medium transition-colors"
+          className="absolute top-2 end-2 sm:-top-12 sm:end-0 z-10 px-3 py-1.5 rounded-lg bg-background/80 sm:bg-transparent text-foreground hover:text-muted-foreground text-sm font-medium transition-colors backdrop-blur-sm border border-border sm:border-0"
         >
-          ✕ {t("close")}
+          ✕ <span className="hidden sm:inline">{t("close")}</span>
         </button>
-        <iframe
-          src={`https://www.youtube.com/embed/${videoKey}?autoplay=1&rel=0`}
-          title={t("trailer")}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="w-full h-full"
-        />
+        <div className="aspect-video w-full">
+          <iframe
+            src={`https://www.youtube.com/embed/${videoKey}?autoplay=1&rel=0`}
+            title={t("trailer")}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="w-full h-full"
+          />
+        </div>
       </div>
     </div>
   );

@@ -51,7 +51,7 @@ export default function TrendingSlider({ movies, onTrailerClick }) {
           {movies.map((movie, movieIdx) => (
             <div
               key={movie.id}
-              className="relative min-w-0 flex-[0_0_100%] min-h-[80vh] md:min-h-[75vh] flex items-end overflow-hidden"
+              className="relative min-w-0 flex-[0_0_100%] min-h-[55vh] sm:min-h-[65vh] md:min-h-[75vh] flex items-end overflow-hidden"
             >
               <div
                 className="absolute inset-0 bg-cover bg-center scale-110 transition-transform duration-[8s]"
@@ -88,7 +88,7 @@ export default function TrendingSlider({ movies, onTrailerClick }) {
                     </span>
                   </div>
 
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+                  <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight break-words">
                     {movie.title}
                     {movie.release_date && (
                       <span className="text-muted-foreground font-normal ms-2 md:ms-3 text-lg md:text-2xl">
@@ -149,7 +149,7 @@ export default function TrendingSlider({ movies, onTrailerClick }) {
 
       <button
         onClick={() => emblaApi?.scrollPrev()}
-        className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-background/40 hover:bg-background/70 text-foreground flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm border border-border hover:scale-110"
+        className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-background/60 hover:bg-background/80 text-foreground flex items-center justify-center transition-all opacity-80 md:opacity-0 md:group-hover:opacity-100 backdrop-blur-sm border border-border hover:scale-110 active:scale-95"
         aria-label="Previous"
       >
         <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -158,7 +158,7 @@ export default function TrendingSlider({ movies, onTrailerClick }) {
       </button>
       <button
         onClick={() => emblaApi?.scrollNext()}
-        className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-background/40 hover:bg-background/70 text-foreground flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm border border-border hover:scale-110"
+        className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-background/60 hover:bg-background/80 text-foreground flex items-center justify-center transition-all opacity-80 md:opacity-0 md:group-hover:opacity-100 backdrop-blur-sm border border-border hover:scale-110 active:scale-95"
         aria-label="Next"
       >
         <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

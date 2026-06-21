@@ -5,7 +5,7 @@ export default function SearchSuggestions({ suggestions, loading, query, onSelec
   const { t } = useI18n();
 
   return (
-    <div className="absolute top-full mt-2 w-full rounded-xl bg-card border border-border shadow-2xl shadow-black/50 overflow-hidden z-50 animate-fade-in">
+    <div className="absolute top-full mt-2 w-full rounded-xl bg-card border border-border shadow-2xl shadow-black/50 overflow-hidden z-50 animate-fade-in max-h-[min(60vh,320px)] overflow-y-auto">
       {loading ? (
         <div className="p-4 text-center text-muted-foreground text-sm">{t("loading")}</div>
       ) : suggestions.length === 0 ? (

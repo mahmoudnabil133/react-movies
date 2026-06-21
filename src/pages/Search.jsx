@@ -96,14 +96,14 @@ export default function Search() {
   }));
 
   return (
-    <div className="min-h-screen bg-background pb-16 m-5">
-      <div className="max-w-7xl mx-auto px-4 space-y-6">
+    <div className="min-h-screen bg-background pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-          <SearchBar initialQuery={query} autoFocus showSuggestions />
+          <SearchBar initialQuery={query} autoFocus showSuggestions fullWidth />
         </div>
 
         {query && (
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground break-words">
             {t("resultsFor")} <span className="text-blue-400">"{query}"</span>
           </h1>
         )}

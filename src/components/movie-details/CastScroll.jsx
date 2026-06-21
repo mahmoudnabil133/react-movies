@@ -17,9 +17,11 @@ export default function CastScroll({ cast = [], crew = [] }) {
       <h2 className="text-xl font-bold text-foreground border-b border-border pb-3">
         {t("castCrew")}
       </h2>
-      <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide scroll-smooth">
+      <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 scrollbar-hide scroll-smooth -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory">
         {people.map((person) => (
-          <CastCard key={`${person.id}-${person.character || person.job}`} person={person} />
+          <div key={`${person.id}-${person.character || person.job}`} className="snap-start shrink-0">
+            <CastCard person={person} />
+          </div>
         ))}
       </div>
     </section>

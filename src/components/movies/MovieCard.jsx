@@ -22,8 +22,8 @@ export default function MovieCard({ movie }) {
           ★ {formatRating(movie.vote_average)}
         </span>
       </div>
-      <div className="p-3">
-        <h3 className="font-semibold text-foreground text-sm line-clamp-1 group-hover:text-blue-400 transition-colors">
+      <div className="p-2.5 sm:p-3">
+        <h3 className="font-semibold text-foreground text-xs sm:text-sm line-clamp-1 group-hover:text-blue-400 transition-colors">
           {movie.title}
         </h3>
         <p className="text-xs text-muted-foreground mt-1">

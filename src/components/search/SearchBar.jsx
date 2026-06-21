@@ -4,8 +4,14 @@ import { useI18n } from "../../hooks/useStores";
 import { searchMovies } from "../../api/tmdb";
 import { useDebounce } from "../../hooks/useDebounce";
 import SearchSuggestions from "./SearchSuggestions";
+import { cn } from "@/lib/utils";
 
-export default function SearchBar({ initialQuery = "", autoFocus = false, showSuggestions = true }) {
+export default function SearchBar({
+  initialQuery = "",
+  autoFocus = false,
+  showSuggestions = true,
+  fullWidth = false,
+}) {
   const [query, setQuery] = useState(initialQuery);
   const [suggestions, setSuggestions] = useState([]);
   const [open, setOpen] = useState(false);
@@ -58,7 +64,10 @@ export default function SearchBar({ initialQuery = "", autoFocus = false, showSu
   };
 
   return (
-    <div ref={wrapperRef} className="relative w-full max-w-md">
+    <div
+      ref={wrapperRef}
+      className={cn("relative w-full", fullWidth ? "max-w-none" : "max-w-md")}
+    >
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <input
           type="text"
@@ -70,13 +79,17 @@ export default function SearchBar({ initialQuery = "", autoFocus = false, showSu
           onFocus={() => setOpen(true)}
           placeholder={t("searchPlaceholder")}
           autoFocus={autoFocus}
-          className="flex-1 px-4 py-2 rounded-lg bg-muted border border-blue-500/20 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+          className="flex-1 min-w-0 px-3 sm:px-4 py-2 rounded-lg bg-muted border border-blue-500/20 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm sm:text-base"
         />
         <button
           type="submit"
-          className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/80 transition shadow-md shrink-0"
+          className="px-3 sm:px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/80 transition shadow-md shrink-0 text-sm font-medium"
+          aria-label={t("search")}
         >
-          {t("search")}
+          <span className="hidden sm:inline">{t("search")}</span>
+          <svg className="w-4 h-4 sm:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
         </button>
       </form>
 

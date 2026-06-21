@@ -13,7 +13,7 @@ export default function RootLayout() {
       <main className="pt-[72px]">
         <Outlet />
       </main>
-      <Toaster position="top-right" closeButton duration={3000} />
+      <Toaster position="top-center" closeButton duration={3000} className="sm:!top-4" />
       {isOpen && <TrailerModal videoKey={videoKey} onClose={closeTrailer} />}
     </div>
   );
