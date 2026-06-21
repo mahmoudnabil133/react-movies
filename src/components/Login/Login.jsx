@@ -15,9 +15,18 @@ import {
   FieldDescription,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router";
+import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { toast } from "../../lib/toast";
 
 export function Login({ className, ...props }) {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   return (
     <div
       className={cn(
@@ -46,15 +55,34 @@ export function Login({ className, ...props }) {
         </CardHeader>
 
         <CardContent>
-          <form className="space-y-5">
+          <form
+            className="space-y-5"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setLoading(true);
+              setError(null);
+              try {
+                await login(email, password);
+                toast.success("Welcome back!");
+                navigate("/");
+              } catch (err) {
+                setError(err.message || "Login failed");
+                toast.error(err.message || "Login failed");
+              } finally {
+                setLoading(false);
+              }
+            }}
+          >
             <FieldGroup>
               {/* Email */}
               <Field>
                 <FieldLabel className="text-white">Email</FieldLabel>
                 <Input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="m@example.com"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-blue-400"
+                  className="bg-white text-gray-900 placeholder-gray-400 border-white/20 focus-visible:ring-blue-400"
                 />
               </Field>
 
@@ -69,20 +97,24 @@ export function Login({ className, ...props }) {
 
                 <Input
                   type="password"
-                  className="bg-white/10 border-white/20 text-white focus-visible:ring-blue-400"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="bg-white text-gray-900 border-white/20 focus-visible:ring-blue-400"
                 />
               </Field>
 
               {/* Buttons */}
               <Field>
-                <Button className="w-full bg-blue-500 hover:bg-blue-600 transition-all">
-                  Login
+                <Button type="submit" disabled={loading} className="w-full">
+                  {loading ? "Logging in..." : "Login"}
                 </Button>
+
+                {error && <div className="text-red-400 text-sm mt-2">{error}</div>}
 
                 <Button
                   variant="outline"
                   type="button"
-                  className="w-full mt-2 border-white/30 text-white hover:bg-white/10"
+                  className="w-full mt-2 border-white/30 text-foreground hover:bg-accent"
                 >
                   Continue with Google
                 </Button>

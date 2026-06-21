@@ -20,7 +20,7 @@ export default function MovieGrid({
 
   if (!loading && movies.length === 0) {
     return (
-      <div className="text-center py-16 text-gray-500">
+      <div className="text-center py-16 text-muted-foreground">
         <p className="text-lg">{t("noResults")}</p>
       </div>
     );

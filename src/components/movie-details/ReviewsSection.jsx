@@ -6,11 +6,11 @@ export default function ReviewsSection({ reviews = [] }) {
 
   return (
     <section className="space-y-4">
-      <h2 className="text-xl font-bold text-white border-b border-white/10 pb-3">
+      <h2 className="text-xl font-bold text-foreground border-b border-border pb-3">
         {t("reviews")}
       </h2>
       {reviews.length === 0 ? (
-        <p className="text-gray-500 text-sm">{t("noReviews")}</p>
+        <p className="text-muted-foreground text-sm">{t("noReviews")}</p>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {reviews.slice(0, 6).map((review) => (

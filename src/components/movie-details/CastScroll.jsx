@@ -14,7 +14,7 @@ export default function CastScroll({ cast = [], crew = [] }) {
 
   return (
     <section className="space-y-4">
-      <h2 className="text-xl font-bold text-white border-b border-white/10 pb-3">
+      <h2 className="text-xl font-bold text-foreground border-b border-border pb-3">
         {t("castCrew")}
       </h2>
       <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide scroll-smooth">

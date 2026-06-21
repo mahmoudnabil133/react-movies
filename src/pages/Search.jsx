@@ -94,14 +94,14 @@ export default function Search() {
   }));
 
   return (
-    <div className="min-h-screen bg-[#0b1220] pb-16">
+    <div className="min-h-screen bg-background pb-16">
       <div className="max-w-7xl mx-auto px-4 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           <SearchBar initialQuery={query} autoFocus showSuggestions />
         </div>
 
         {query && (
-          <h1 className="text-2xl font-bold text-white">
+          <h1 className="text-2xl font-bold text-foreground">
             {t("resultsFor")} <span className="text-blue-400">"{query}"</span>
           </h1>
         )}
