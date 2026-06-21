@@ -42,7 +42,7 @@ export default function TrendingSlider({ movies, onTrailerClick }) {
 
   return (
     <div
-      className="relative -mt-[72px] pt-[72px] group"
+      className="relative group"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >

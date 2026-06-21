@@ -30,21 +30,16 @@ const Navbar = () => {
   const { theme, setTheme } = useTheme();
 
   return (
-    <nav className="fixed top-0 start-0 w-full z-50">
+    <nav className="fixed top-0 start-0 w-full z-50 bg-transparent backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4">
 
-        <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
-          <div className="relative">
-            <img
-              src="/movie_best-logo-1.png"
-              alt="Movie Best"
-              className="h-9 w-auto transition-transform duration-300 group-hover:scale-105"
-              onError={(e) => {
-                e.target.style.display = "none";
-              }}
-            />
-            <div className="absolute -inset-1 bg-blue-500/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </div>
+        <Link to="/" className="flex items-center shrink-0">
+          <img
+            src="/movie_best-logo-1.png"
+            alt="Movie Best"
+            className="h-9 w-auto"
+            onError={(e) => { e.target.style.display = "none"; }}
+          />
         </Link>
 
         <ul className="hidden lg:flex items-center gap-6">
@@ -54,7 +49,7 @@ const Navbar = () => {
             <span className="flex items-center gap-1.5">
               {t("wishlist")}
               {wishlist.length > 0 && (
-                <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-blue-600 text-white tabular-nums leading-none">
+                <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full border border-border/50 text-foreground tabular-nums leading-none">
                   {wishlist.length}
                 </span>
               )}
@@ -71,10 +66,10 @@ const Navbar = () => {
             <select
               value={lang}
               onChange={(e) => setLang(e.target.value)}
-              className="appearance-none px-2.5 py-1.5 pr-6 rounded-lg bg-muted/50 border border-border/50 text-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/40 transition-all cursor-pointer hover:bg-muted"
+              className="appearance-none px-2.5 py-1.5 pr-6 rounded-lg border border-border/50 text-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all cursor-pointer"
             >
               {languages.map((l) => (
-                <option key={l.code} value={l.code} className="bg-background text-foreground">
+                <option key={l.code} value={l.code} className="text-foreground">
                   {l.label}
                 </option>
               ))}
@@ -90,7 +85,7 @@ const Navbar = () => {
           <button
             type="button"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="w-8 h-8 rounded-lg bg-muted/50 border border-border/50 flex items-center justify-center transition-all hover:bg-muted hover:scale-105 active:scale-95"
+            className="w-8 h-8 rounded-lg border border-border/50 flex items-center justify-center transition-all hover:border-border active:scale-95"
             aria-label="Toggle theme"
           >
             {theme === "dark" ? (
@@ -112,7 +107,7 @@ const Navbar = () => {
               <button
                 type="button"
                 onClick={() => { logout(); toast.success("Logged out"); }}
-                className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-500 hover:bg-red-500/10 transition-all active:scale-95"
+                className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-500 transition-all active:scale-95"
               >
                 {t("logout") || "Logout"}
               </button>
@@ -121,13 +116,13 @@ const Navbar = () => {
             <div className="flex items-center gap-1.5 ms-1.5 ps-1.5 border-s border-border/50">
               <Link
                 to="/login"
-                className="px-3 py-1.5 rounded-lg text-xs font-medium text-foreground hover:bg-muted transition-all active:scale-95"
+                className="px-3 py-1.5 rounded-lg text-xs font-medium text-foreground transition-all active:scale-95"
               >
                 {t("login") || "Login"}
               </Link>
               <Link
                 to="/signup"
-                className="px-3 py-1.5 rounded-lg text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/80 transition-all active:scale-95"
+                className="px-3 py-1.5 rounded-lg text-xs font-medium border border-border/50 text-foreground transition-all active:scale-95"
               >
                 {t("signup") || "Sign Up"}
               </Link>
