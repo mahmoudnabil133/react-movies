@@ -12,7 +12,7 @@ export default function ReviewCard({ review }) {
   const avatar = review.author_details?.avatar_path;
 
   return (
-    <div className="p-4 rounded-xl bg-[#141b2d] border border-white/5 space-y-3">
+    <div className="p-4 rounded-xl bg-card border border-border space-y-3">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full overflow-hidden bg-[#1a2235] flex items-center justify-center shrink-0">
           {avatar ? (
@@ -22,17 +22,17 @@ export default function ReviewCard({ review }) {
               className="w-full h-full object-cover"
             />
           ) : (
-            <span className="text-gray-500 text-sm">👤</span>
+            <span className="text-muted-foreground text-sm">👤</span>
           )}
         </div>
         <div>
-          <p className="text-sm font-medium text-white">{review.author}</p>
+          <p className="text-sm font-medium text-foreground">{review.author}</p>
           {rating != null && (
             <p className="text-xs text-yellow-400">★ {rating}/10</p>
           )}
         </div>
       </div>
-      <p className="text-sm text-gray-300 leading-relaxed">
+      <p className="text-sm text-muted-foreground leading-relaxed">
         "{displayText}"
         {isLong && (
           <button

@@ -1,6 +1,6 @@
 export default function MovieSkeleton() {
   return (
-    <div className="rounded-xl overflow-hidden bg-[#141b2d] border border-white/5 animate-pulse">
+    <div className="rounded-xl overflow-hidden bg-card border border-border animate-pulse">
       <div className="aspect-[2/3] bg-gradient-to-br from-[#1a2235] to-[#0f1520]" />
       <div className="p-3 space-y-2">
         <div className="h-4 bg-[#1a2235] rounded w-3/4" />

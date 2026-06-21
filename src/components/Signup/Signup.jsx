@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input"
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { toast } from "../../lib/toast";
 
 export function Signup({ className, ...props }) {
   const navigate = useNavigate();
@@ -64,9 +65,11 @@ export function Signup({ className, ...props }) {
               setError(null);
               try {
                 await register({ name, phone, email, password });
+                toast.success("Account created successfully!");
                 navigate("/");
               } catch (err) {
                 setError(err.message || "Registration failed");
+                toast.error(err.message || "Registration failed");
               } finally {
                 setLoading(false);
               }
@@ -81,7 +84,7 @@ export function Signup({ className, ...props }) {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="lorem ipsum"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-blue-400"
+                  className="bg-white text-gray-900 placeholder-gray-400 border-white/20 focus-visible:ring-blue-400"
                 />
               </Field>
               {/* Phone */}
@@ -92,7 +95,7 @@ export function Signup({ className, ...props }) {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+20 0000 000 000"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-blue-400"
+                  className="bg-white text-gray-900 placeholder-gray-400 border-white/20 focus-visible:ring-blue-400"
                 />
               </Field>
               {/* Email */}
@@ -103,7 +106,7 @@ export function Signup({ className, ...props }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="m@example.com"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-blue-400"
+                  className="bg-white text-gray-900 placeholder-gray-400 border-white/20 focus-visible:ring-blue-400"
                 />
               </Field>
 
@@ -120,13 +123,13 @@ export function Signup({ className, ...props }) {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-white/10 border-white/20 text-white focus-visible:ring-blue-400"
+                  className="bg-white text-gray-900 border-white/20 focus-visible:ring-blue-400"
                 />
               </Field>
 
               {/* Buttons */}
               <Field>
-                <Button type="submit" disabled={loading} className="w-full bg-blue-500 hover:bg-blue-600 transition-all">
+                <Button type="submit" disabled={loading} className="w-full">
                   {loading ? "Signing up..." : "Sign Up"}
                 </Button>
 
@@ -135,7 +138,7 @@ export function Signup({ className, ...props }) {
                 <Button
                   variant="outline"
                   type="button"
-                  className="w-full mt-2 border-white/30 text-white hover:bg-white/10"
+                  className="w-full mt-2 border-white/30 text-foreground hover:bg-accent"
                 >
                   Continue with Google
                 </Button>

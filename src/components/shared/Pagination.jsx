@@ -41,12 +41,12 @@ export default function Pagination({ page, totalPages, onPageChange }) {
       aria-label="Pagination"
       className="flex items-center justify-center"
     >
-      <div className="inline-flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-2.5 rounded-full bg-[#1a1f2e] border border-white/5 shadow-lg">
+      <div className="inline-flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-2.5 rounded-full bg-[#1a1f2e] border border-border shadow-lg">
         <button
           type="button"
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
-          className="flex items-center gap-1 px-2 sm:px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-gray-500 transition-colors"
+          className="flex items-center gap-1 px-2 sm:px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-muted-foreground transition-colors"
         >
           <span aria-hidden="true">&lt;</span>
           <span className="hidden sm:inline">{t("prev")}</span>
@@ -57,7 +57,7 @@ export default function Pagination({ page, totalPages, onPageChange }) {
             item === "..." ? (
               <span
                 key={`dots-${index}`}
-                className="px-2 py-1 text-sm text-gray-500 select-none"
+                className="px-2 py-1 text-sm text-muted-foreground select-none"
               >
                 …
               </span>
@@ -70,7 +70,7 @@ export default function Pagination({ page, totalPages, onPageChange }) {
                 className={`min-w-[2.25rem] h-9 px-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
                   page === item
                     ? "bg-teal-500 text-black shadow-md shadow-teal-500/30"
-                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
                 }`}
               >
                 {item}
@@ -83,7 +83,7 @@ export default function Pagination({ page, totalPages, onPageChange }) {
           type="button"
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
-          className="flex items-center gap-1 px-2 sm:px-3 py-1.5 text-sm font-medium text-white hover:text-teal-400 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-white transition-colors"
+          className="flex items-center gap-1 px-2 sm:px-3 py-1.5 text-sm font-medium text-foreground hover:text-teal-400 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-foreground transition-colors"
         >
           <span className="hidden sm:inline">{t("next")}</span>
           <span aria-hidden="true">&gt;</span>
