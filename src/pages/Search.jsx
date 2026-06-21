@@ -1,33 +1,35 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router";
-import { searchMovies, fetchGenres, discoverMovies } from "../api/tmdb";
+import { searchMovies, discoverMovies } from "../api/tmdb";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
-import { useI18n } from "../context/I18nContext";
+import { useI18n, useFilters, useGenres } from "../hooks/useStores";
 import { SORT_OPTIONS } from "../lib/constants";
 import SearchBar from "../components/search/SearchBar";
 import MovieFilters from "../components/movies/MovieFilters";
 import MovieGrid from "../components/movies/MovieGrid";
 
 export default function Search() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
   const { t } = useI18n();
+  const { genres } = useGenres();
+  const {
+    selectedGenre,
+    sortBy,
+    yearFrom,
+    yearTo,
+    scrollMode,
+    setSelectedGenre,
+    setSortBy,
+    setYearFrom,
+    setYearTo,
+    setScrollMode,
+  } = useFilters();
 
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [scrollMode, setScrollMode] = useState("pagination");
-  const [genres, setGenres] = useState([]);
-
-  const [selectedGenre, setSelectedGenre] = useState("");
-  const [sortBy, setSortBy] = useState("popularity.desc");
-  const [yearFrom, setYearFrom] = useState("");
-  const [yearTo, setYearTo] = useState("");
-
-  useEffect(() => {
-    fetchGenres().then((data) => setGenres(data.genres || [])).catch(console.error);
-  }, []);
 
   const loadResults = useCallback(
     async (pageNum, append = false) => {

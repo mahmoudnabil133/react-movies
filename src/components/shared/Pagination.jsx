@@ -1,4 +1,4 @@
-import { useI18n } from "../../context/I18nContext";
+import { useI18n } from "../../hooks/useStores";
 
 function getPageRange(current, total) {
   if (total <= 7) {

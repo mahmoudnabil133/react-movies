@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { useI18n } from "../context/I18nContext";
+import { useI18n } from "../hooks/useStores";
 
 export default function NotFound() {
   const { t } = useI18n();

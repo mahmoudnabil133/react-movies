@@ -1,4 +1,4 @@
-import { useI18n } from "../../context/I18nContext";
+import { useI18n } from "../../hooks/useStores";
 import MovieCard from "../movies/MovieCard";
 
 export default function RecommendationsGrid({ movies = [] }) {

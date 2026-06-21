@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useI18n } from "../../context/I18nContext";
+import { useI18n } from "../../hooks/useStores";
 import { searchMovies } from "../../api/tmdb";
 import { useDebounce } from "../../hooks/useDebounce";
 import SearchSuggestions from "./SearchSuggestions";

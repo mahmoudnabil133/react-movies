@@ -1,21 +1,20 @@
 import { Toaster } from "sonner";
 import { Outlet } from "react-router";
 import Navbar from "../components/Navbar/Navbar";
-import { AuthProvider } from "../context/AuthContext";
-import { WishlistProvider } from "../context/WishlistContext";
+import TrailerModal from "../components/shared/TrailerModal";
+import { useTrailer } from "../hooks/useStores";
 
 export default function RootLayout() {
+  const { videoKey, isOpen, closeTrailer } = useTrailer();
+
   return (
     <div className="min-h-screen bg-background">
-      <AuthProvider>
-        <WishlistProvider>
-          <Navbar />
-          <main className="pt-[72px]">
-            <Outlet />
-          </main>
-          <Toaster position="top-right" closeButton duration={3000} />
-        </WishlistProvider>
-      </AuthProvider>
+      <Navbar />
+      <main className="pt-[72px]">
+        <Outlet />
+      </main>
+      <Toaster position="top-right" closeButton duration={3000} />
+      {isOpen && <TrailerModal videoKey={videoKey} onClose={closeTrailer} />}
     </div>
   );
 }

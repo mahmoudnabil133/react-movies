@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useI18n } from "../../context/I18nContext";
+import { useI18n } from "../../hooks/useStores";
 
 export default function ReviewCard({ review }) {
   const { t } = useI18n();

@@ -1,7 +1,5 @@
-import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
-import { useWishlist } from "../../context/WishlistContext";
-import { useI18n } from "../../context/I18nContext";
+import { useAuth, useWishlist, useI18n } from "../../hooks/useStores";
 import { toast } from "../../lib/toast";
 
 export default function WishlistButton({ movie, variant = "default" }) {

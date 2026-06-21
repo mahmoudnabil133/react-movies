@@ -1,5 +1,5 @@
 import { getImageUrl, formatRating } from "../../lib/formatters";
-import { useI18n } from "../../context/I18nContext";
+import { useI18n } from "../../hooks/useStores";
 
 export default function SearchSuggestions({ suggestions, loading, query, onSelect, onSearchAll }) {
   const { t } = useI18n();

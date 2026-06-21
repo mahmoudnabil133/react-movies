@@ -1,4 +1,4 @@
-import { useI18n } from "../../context/I18nContext";
+import { useI18n } from "../../hooks/useStores";
 import CastCard from "./CastCard";
 
 export default function CastScroll({ cast = [], crew = [] }) {

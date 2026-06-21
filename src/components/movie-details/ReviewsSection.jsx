@@ -1,4 +1,4 @@
-import { useI18n } from "../../context/I18nContext";
+import { useI18n } from "../../hooks/useStores";
 import ReviewCard from "./ReviewCard";
 
 export default function ReviewsSection({ reviews = [] }) {

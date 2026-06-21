@@ -1,39 +1,41 @@
 import { useState, useEffect, useCallback } from "react";
-import { toast } from "../lib/toast";
 import { MOVIE_TABS, SORT_OPTIONS } from "../lib/constants";
-import { fetchMoviesByCategory, discoverMovies, fetchGenres, fetchMovieVideos, fetchTrending } from "../api/tmdb";
+import { fetchMoviesByCategory, discoverMovies, fetchTrending } from "../api/tmdb";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
-import { useI18n } from "../context/I18nContext";
+import { useI18n, useFilters, useGenres, useTrailer } from "../hooks/useStores";
 import TrendingSlider from "../components/movies/TrendingSlider";
 import TabBar from "../components/movies/TabBar";
 import MovieFilters from "../components/movies/MovieFilters";
 import MovieGrid from "../components/movies/MovieGrid";
-import TrailerModal from "../components/shared/TrailerModal";
 
 export default function Home() {
   const { t } = useI18n();
-  const [activeTab, setActiveTab] = useState("now_playing");
+  const { genres } = useGenres();
+  const { openTrailer } = useTrailer();
+  const {
+    activeTab,
+    selectedGenre,
+    sortBy,
+    yearFrom,
+    yearTo,
+    scrollMode,
+    hasFilters,
+    setActiveTab,
+    setSelectedGenre,
+    setSortBy,
+    setYearFrom,
+    setYearTo,
+    setScrollMode,
+  } = useFilters();
+
   const [movies, setMovies] = useState([]);
   const [heroMovie, setHeroMovie] = useState(null);
-  const [genres, setGenres] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [scrollMode, setScrollMode] = useState("infinite");
-
-  const [selectedGenre, setSelectedGenre] = useState("");
-  const [sortBy, setSortBy] = useState("popularity.desc");
-  const [yearFrom, setYearFrom] = useState("");
-  const [yearTo, setYearTo] = useState("");
-
   const [trendingMovies, setTrendingMovies] = useState([]);
-  const [trailerKey, setTrailerKey] = useState(null);
-  const [showTrailer, setShowTrailer] = useState(false);
-
-  const hasFilters = selectedGenre || yearFrom || yearTo || sortBy !== "popularity.desc";
 
   useEffect(() => {
-    fetchGenres().then((data) => setGenres(data.genres || [])).catch(console.error);
     fetchTrending("week").then((data) => {
       setTrendingMovies(data.results || []);
       setHeroMovie(data.results?.[0] || null);
@@ -69,7 +71,6 @@ export default function Home() {
     [activeTab, hasFilters, selectedGenre, sortBy, yearFrom, yearTo]
   );
 
-  // Load movies on mount and when filters/tab change
   useEffect(() => {
     setPage(1);
     loadMovies(1, false);
@@ -87,23 +88,9 @@ export default function Home() {
     loading
   );
 
-  const handleTrailerClick = async (movieId) => {
+  const handleTrailerClick = (movieId) => {
     const id = movieId || heroMovie?.id;
-    if (!id) return;
-    try {
-      const data = await fetchMovieVideos(id);
-      const trailer = data.results?.find(
-        (v) => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")
-      );
-      if (trailer) {
-        setTrailerKey(trailer.key);
-        setShowTrailer(true);
-      } else {
-        toast.error("No trailer available for this movie.");
-      }
-    } catch (err) {
-      toast.error("Failed to load trailer.");
-    }
+    if (id) openTrailer(id);
   };
 
   const sortOptions = SORT_OPTIONS.map((opt) => ({
@@ -147,10 +134,6 @@ export default function Home() {
           onPageChange={(p) => loadMovies(p, false)}
         />
       </div>
-
-      {showTrailer && (
-        <TrailerModal videoKey={trailerKey} onClose={() => setShowTrailer(false)} />
-      )}
     </div>
   );
 }

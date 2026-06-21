@@ -1,6 +1,5 @@
 import { Link } from "react-router";
-import { useI18n } from "../context/I18nContext";
-import { useWishlist } from "../context/WishlistContext";
+import { useI18n, useWishlist } from "../hooks/useStores";
 import MovieCard from "../components/movies/MovieCard";
 
 export default function Wishlist() {

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { Link } from "react-router";
 import { getImageUrl, formatRating, formatVoteCount } from "../../lib/formatters";
-import { useI18n } from "../../context/I18nContext";
+import { useI18n } from "../../hooks/useStores";
 import WishlistButton from "../shared/WishlistButton";
 
 export default function TrendingSlider({ movies, onTrailerClick }) {

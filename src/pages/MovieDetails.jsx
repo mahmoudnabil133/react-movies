@@ -1,23 +1,20 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import { toast } from "../lib/toast";
-import { fetchMovieDetails, fetchMovieVideos } from "../api/tmdb";
-import { useI18n } from "../context/I18nContext";
+import { fetchMovieDetails } from "../api/tmdb";
+import { useI18n, useTrailer } from "../hooks/useStores";
 import MovieHero from "../components/movie-details/MovieHero";
 import CastScroll from "../components/movie-details/CastScroll";
 import ReviewsSection from "../components/movie-details/ReviewsSection";
 import RecommendationsGrid from "../components/movie-details/RecommendationsGrid";
-import TrailerModal from "../components/shared/TrailerModal";
 import { MovieGridSkeleton } from "../components/movies/MovieSkeleton";
 
 export default function MovieDetails() {
   const { id } = useParams();
   const { t } = useI18n();
+  const { openTrailer } = useTrailer();
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [trailerKey, setTrailerKey] = useState(null);
-  const [showTrailer, setShowTrailer] = useState(false);
   const [expandedOverview, setExpandedOverview] = useState(false);
 
   useEffect(() => {
@@ -29,27 +26,8 @@ export default function MovieDetails() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const handleTrailerClick = async () => {
-    const videos = movie?.videos?.results || [];
-    let trailer = videos.find(
-      (v) => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")
-    );
-    if (!trailer) {
-      try {
-        const data = await fetchMovieVideos(id);
-        trailer = data.results?.find(
-          (v) => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")
-        );
-      } catch {
-        /* ignore */
-      }
-    }
-    if (trailer) {
-      setTrailerKey(trailer.key);
-      setShowTrailer(true);
-    } else {
-      toast.error("No trailer available for this movie.");
-    }
+  const handleTrailerClick = () => {
+    openTrailer(id, movie?.videos?.results);
   };
 
   if (loading) {
@@ -103,10 +81,6 @@ export default function MovieDetails() {
         <ReviewsSection reviews={reviews} />
         <RecommendationsGrid movies={recommendations} />
       </div>
-
-      {showTrailer && (
-        <TrailerModal videoKey={trailerKey} onClose={() => setShowTrailer(false)} />
-      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import MovieCard from "./MovieCard";
 import MovieSkeleton, { MovieGridSkeleton } from "./MovieSkeleton";
 import Pagination from "../shared/Pagination";
-import { useI18n } from "../../context/I18nContext";
+import { useI18n } from "../../hooks/useStores";
 
 export default function MovieGrid({
   movies,

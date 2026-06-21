@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useStores";
 import { toast } from "../../lib/toast";
 
 export function Login({ className, ...props }) {

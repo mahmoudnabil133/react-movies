@@ -1,5 +1,5 @@
 import { getImageUrl, formatRating, formatVoteCount, formatRuntime, formatYear } from "../../lib/formatters";
-import { useI18n } from "../../context/I18nContext";
+import { useI18n } from "../../hooks/useStores";
 import WishlistButton from "../shared/WishlistButton";
 
 export default function MovieHero({ movie, onTrailerClick }) {

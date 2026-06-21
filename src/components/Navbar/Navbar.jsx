@@ -2,9 +2,7 @@ import { Link, useLocation } from "react-router";
 import { useTheme } from "next-themes";
 import { toast } from "../../lib/toast";
 import SearchBar from "../search/SearchBar";
-import { useI18n } from "../../context/I18nContext";
-import { useWishlist } from "../../context/WishlistContext";
-import { useAuth } from "../../context/AuthContext";
+import { useI18n, useWishlist, useAuth } from "../../hooks/useStores";
 
 const NavLink = ({ to, children, active }) => (
   <li>

@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { getImageUrl, formatRating, formatVoteCount } from "../../lib/formatters";
-import { useI18n } from "../../context/I18nContext";
+import { useI18n } from "../../hooks/useStores";
 import WishlistButton from "../shared/WishlistButton";
 
 export default function HeroBanner({ movie, onTrailerClick }) {

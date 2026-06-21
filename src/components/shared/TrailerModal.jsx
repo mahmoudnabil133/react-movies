@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useI18n } from "../../context/I18nContext";
+import { useI18n } from "../../hooks/useStores";
 
 export default function TrailerModal({ videoKey, onClose }) {
   const { t } = useI18n();
