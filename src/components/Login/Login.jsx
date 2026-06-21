@@ -1,21 +1,50 @@
 import { Link, useNavigate } from "react-router";
-import { useState } from "react";
+import { useFormik } from "formik";
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useAuth, useI18n } from "../../hooks/useStores";
 import { toast } from "../../lib/toast";
+import { createLoginSchema } from "../../lib/validations/authSchemas";
+import { parseWithSchema, showValidationErrors } from "../../lib/validations/showValidationErrors";
 import AuthLayout from "../auth/AuthLayout";
+
+const inputClassName =
+  "h-11 bg-muted/50 border-border focus-visible:ring-blue-500/30 transition-all duration-200 focus-visible:scale-[1.01]";
 
 export function Login({ className, ...props }) {
   const navigate = useNavigate();
   const { login } = useAuth();
   const { t } = useI18n();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const loginSchema = useMemo(() => createLoginSchema(t), [t]);
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    onSubmit: async (values, { setSubmitting }) => {
+      const result = parseWithSchema(loginSchema, values);
+
+      if (!result.success) {
+        showValidationErrors(result.error.issues);
+        setSubmitting(false);
+        return;
+      }
+
+      try {
+        await login(result.data.email, result.data.password);
+        toast.success(t("welcomeBack"));
+        navigate("/");
+      } catch (err) {
+        toast.error(err.message || t("loginFailed"));
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
 
   return (
     <AuthLayout
@@ -35,43 +64,28 @@ export function Login({ className, ...props }) {
       }
       {...props}
     >
-      <form
-        className="space-y-4"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          setLoading(true);
-          setError(null);
-          try {
-            await login(email, password);
-            toast.success(t("welcomeBack"));
-            navigate("/");
-          } catch (err) {
-            setError(err.message || t("loginFailed"));
-            toast.error(err.message || t("loginFailed"));
-          } finally {
-            setLoading(false);
-          }
-        }}
-      >
+      <form className="space-y-4" onSubmit={formik.handleSubmit} noValidate>
         <FieldGroup className="gap-4">
           <Field className="auth-field gap-1.5">
-            <FieldLabel className="text-foreground text-sm font-medium">
+            <FieldLabel htmlFor="email" className="text-foreground text-sm font-medium">
               {t("email")}
             </FieldLabel>
             <Input
+              id="email"
+              name="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               placeholder="you@example.com"
-              required
               autoComplete="email"
-              className="h-11 bg-muted/50 border-border focus-visible:ring-blue-500/30 transition-all duration-200 focus-visible:scale-[1.01]"
+              className={inputClassName}
             />
           </Field>
 
           <Field className="auth-field gap-1.5">
             <div className="flex items-center justify-between w-full">
-              <FieldLabel className="text-foreground text-sm font-medium">
+              <FieldLabel htmlFor="password" className="text-foreground text-sm font-medium">
                 {t("password")}
               </FieldLabel>
               <span className="text-xs text-blue-400/80 hover:text-blue-400 cursor-pointer transition-colors">
@@ -79,28 +93,24 @@ export function Login({ className, ...props }) {
               </span>
             </div>
             <Input
+              id="password"
+              name="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               autoComplete="current-password"
-              className="h-11 bg-muted/50 border-border focus-visible:ring-blue-500/30 transition-all duration-200 focus-visible:scale-[1.01]"
+              className={inputClassName}
             />
           </Field>
-
-          {error && (
-            <div className="auth-field auth-error rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              {error}
-            </div>
-          )}
 
           <Field className="auth-field pt-1">
             <Button
               type="submit"
-              disabled={loading}
+              disabled={formik.isSubmitting}
               className={cn("auth-submit w-full h-11 rounded-xl text-sm font-semibold")}
             >
-              {loading ? (
+              {formik.isSubmitting ? (
                 <span className="flex items-center gap-2">
                   <span className="auth-spinner" />
                   {t("loggingIn")}

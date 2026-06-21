@@ -1,23 +1,57 @@
 import { Link, useNavigate } from "react-router";
-import { useState } from "react";
+import { useFormik } from "formik";
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useAuth, useI18n } from "../../hooks/useStores";
 import { toast } from "../../lib/toast";
+import { createSignupSchema } from "../../lib/validations/authSchemas";
+import { parseWithSchema, showValidationErrors } from "../../lib/validations/showValidationErrors";
 import AuthLayout from "../auth/AuthLayout";
+
+const inputClassName =
+  "h-11 bg-muted/50 border-border focus-visible:ring-blue-500/30 transition-all duration-200 focus-visible:scale-[1.01]";
 
 export function Signup({ className, ...props }) {
   const navigate = useNavigate();
   const { register } = useAuth();
   const { t } = useI18n();
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const signupSchema = useMemo(() => createSignupSchema(t), [t]);
+
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      phone: "",
+      email: "",
+      password: "",
+    },
+    onSubmit: async (values, { setSubmitting }) => {
+      const result = parseWithSchema(signupSchema, values);
+
+      if (!result.success) {
+        showValidationErrors(result.error.issues);
+        setSubmitting(false);
+        return;
+      }
+
+      try {
+        await register({
+          name: result.data.name,
+          phone: result.data.phone || undefined,
+          email: result.data.email,
+          password: result.data.password,
+        });
+        toast.success(t("signupSuccess"));
+        navigate("/");
+      } catch (err) {
+        toast.error(err.message || t("signupFailed"));
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
 
   return (
     <AuthLayout
@@ -37,96 +71,82 @@ export function Signup({ className, ...props }) {
       }
       {...props}
     >
-      <form
-        className="space-y-4"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          setLoading(true);
-          setError(null);
-          try {
-            await register({ name, phone, email, password });
-            toast.success(t("signupSuccess"));
-            navigate("/");
-          } catch (err) {
-            setError(err.message || t("signupFailed"));
-            toast.error(err.message || t("signupFailed"));
-          } finally {
-            setLoading(false);
-          }
-        }}
-      >
+      <form className="space-y-4" onSubmit={formik.handleSubmit} noValidate>
         <FieldGroup className="gap-3.5">
           <Field className="auth-field gap-1.5">
-            <FieldLabel className="text-foreground text-sm font-medium">
+            <FieldLabel htmlFor="name" className="text-foreground text-sm font-medium">
               {t("name")}
             </FieldLabel>
             <Input
+              id="name"
+              name="name"
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               placeholder="John Doe"
-              required
               autoComplete="name"
-              className="h-11 bg-muted/50 border-border focus-visible:ring-blue-500/30 transition-all duration-200 focus-visible:scale-[1.01]"
+              className={inputClassName}
             />
           </Field>
 
           <Field className="auth-field gap-1.5">
-            <FieldLabel className="text-foreground text-sm font-medium">
+            <FieldLabel htmlFor="phone" className="text-foreground text-sm font-medium">
               {t("phone")}
             </FieldLabel>
             <Input
+              id="phone"
+              name="phone"
               type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              value={formik.values.phone}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               placeholder="+1 000 000 0000"
               autoComplete="tel"
-              className="h-11 bg-muted/50 border-border focus-visible:ring-blue-500/30 transition-all duration-200 focus-visible:scale-[1.01]"
+              className={inputClassName}
             />
           </Field>
 
           <Field className="auth-field gap-1.5">
-            <FieldLabel className="text-foreground text-sm font-medium">
+            <FieldLabel htmlFor="email" className="text-foreground text-sm font-medium">
               {t("email")}
             </FieldLabel>
             <Input
+              id="email"
+              name="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               placeholder="you@example.com"
-              required
               autoComplete="email"
-              className="h-11 bg-muted/50 border-border focus-visible:ring-blue-500/30 transition-all duration-200 focus-visible:scale-[1.01]"
+              className={inputClassName}
             />
           </Field>
 
           <Field className="auth-field gap-1.5">
-            <FieldLabel className="text-foreground text-sm font-medium">
+            <FieldLabel htmlFor="password" className="text-foreground text-sm font-medium">
               {t("password")}
             </FieldLabel>
             <Input
+              id="password"
+              name="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               autoComplete="new-password"
-              className="h-11 bg-muted/50 border-border focus-visible:ring-blue-500/30 transition-all duration-200 focus-visible:scale-[1.01]"
+              className={inputClassName}
             />
           </Field>
-
-          {error && (
-            <div className="auth-field auth-error rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              {error}
-            </div>
-          )}
 
           <Field className="auth-field pt-1">
             <Button
               type="submit"
-              disabled={loading}
+              disabled={formik.isSubmitting}
               className={cn("auth-submit w-full h-11 rounded-xl text-sm font-semibold")}
             >
-              {loading ? (
+              {formik.isSubmitting ? (
                 <span className="flex items-center gap-2">
                   <span className="auth-spinner" />
                   {t("signingUp")}
