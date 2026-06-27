@@ -5,7 +5,7 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true },
     phone: { type: String, default: "" },
-    wishlist: { type: [Number], default: [] },
+    wishlist: { type: [String], default: [] },
 }, { timestamps: true });
 
 const User = mongoose.models.User || mongoose.model("User", UserSchema);

@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useAuthStore } from '../stores/authStore';
 import { useWishlistStore } from '../stores/wishlistStore';
 import { useI18nStore } from '../stores/i18nStore';
-import { useGenresStore } from '../stores/genresStore';
 import { LANGUAGES } from '../lib/constants';
 
 export default function StoreInitializer({ children }) {
@@ -12,7 +11,6 @@ export default function StoreInitializer({ children }) {
 
   useEffect(() => {
     useAuthStore.getState().initializeAuth();
-    useGenresStore.getState().loadGenres();
   }, []);
 
   useEffect(() => {

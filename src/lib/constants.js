@@ -1,23 +1,29 @@
-export const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-export const TMDB_BASE_URL = "https://api.themoviedb.org/3";
-export const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p";
+export const OL_BASE_URL = "https://openlibrary.org";
+export const OL_COVER_BASE = "https://covers.openlibrary.org/b";
 export const AUTH_BASE_URL = import.meta.env.VITE_AUTH_BASE_URL || "";
 
-export const POSTER_SIZE = "w500";
-export const BACKDROP_SIZE = "original";
-export const PROFILE_SIZE = "w185";
+export const COVER_SIZE_SMALL = "S";
+export const COVER_SIZE_MEDIUM = "M";
+export const COVER_SIZE_LARGE = "L";
 
-export const MOVIE_TABS = [
-  { id: "now_playing", label: "Now Playing" },
+export const BOOK_TABS = [
   { id: "popular", label: "Popular" },
-  { id: "top_rated", label: "Top Rated" },
-  { id: "upcoming", label: "Upcoming" },
+  { id: "fiction", label: "Fiction" },
+  { id: "fantasy", label: "Fantasy" },
+  { id: "science_fiction", label: "Science Fiction" },
+  { id: "mystery", label: "Mystery" },
+  { id: "romance", label: "Romance" },
+  { id: "history", label: "History" },
+  { id: "science", label: "Science" },
+  { id: "biography", label: "Biography" },
+  { id: "young_adult", label: "Young Adult" },
 ];
 
 export const SORT_OPTIONS = [
-  { value: "popularity.desc", label: "Popularity" },
-  { value: "vote_average.desc", label: "Rating" },
-  { value: "primary_release_date.desc", label: "Release Date" },
+  { value: "relevance", label: "Relevance" },
+  { value: "new", label: "Newest" },
+  { value: "old", label: "Oldest" },
+  { value: "rating", label: "Highest Rated" },
 ];
 
 export const LANGUAGES = [
@@ -25,3 +31,5 @@ export const LANGUAGES = [
   { code: "ar", label: "العربية", dir: "rtl" },
   { code: "fr", label: "Français", dir: "ltr" },
 ];
+
+export const PLACEHOLDER_COVER = "/placeholder-poster.svg";

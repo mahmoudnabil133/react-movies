@@ -1,14 +1,20 @@
 import { useI18n } from "../../hooks/useStores";
 
+const tabLabelMap = {
+  popular: "popular",
+  fiction: "fiction",
+  fantasy: "fantasy",
+  science_fiction: "scienceFiction",
+  mystery: "mystery",
+  romance: "romance",
+  history: "history",
+  science: "science",
+  biography: "biography",
+  young_adult: "youngAdult",
+};
+
 export default function TabBar({ tabs, activeTab, onTabChange }) {
   const { t } = useI18n();
-
-  const labelMap = {
-    now_playing: t("nowPlaying"),
-    popular: t("popular"),
-    top_rated: t("topRated"),
-    upcoming: t("upcoming"),
-  };
 
   return (
     <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-hide snap-x snap-mandatory -mx-1 px-1">
@@ -22,7 +28,7 @@ export default function TabBar({ tabs, activeTab, onTabChange }) {
               : "bg-muted text-muted-foreground hover:bg-accent hover:text-foreground"
           }`}
         >
-          {labelMap[tab.id] || tab.label}
+          {t(tabLabelMap[tab.id] || tab.id) || tab.label}
         </button>
       ))}
     </div>

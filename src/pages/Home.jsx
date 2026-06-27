@@ -1,66 +1,63 @@
 import { useState, useEffect, useCallback } from "react";
-import { MOVIE_TABS, SORT_OPTIONS } from "../lib/constants";
-import { fetchMoviesByCategory, discoverMovies, fetchTrending } from "../api/tmdb";
+import { BOOK_TABS, SORT_OPTIONS } from "../lib/constants";
+import { searchBooks, fetchTrending } from "../api/openlibrary";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
-import { useI18n, useFilters, useGenres, useTrailer } from "../hooks/useStores";
-import TrendingSlider from "../components/movies/TrendingSlider";
-import TabBar from "../components/movies/TabBar";
-import MovieFilters from "../components/movies/MovieFilters";
-import MovieGrid from "../components/movies/MovieGrid";
+import { useI18n, useFilters, useSubjects } from "../hooks/useStores";
+import TrendingSlider from "../components/books/TrendingSlider";
+import TabBar from "../components/books/TabBar";
+import BookFilters from "../components/books/BookFilters";
+import BookGrid from "../components/books/BookGrid";
 
 export default function Home() {
   const { t } = useI18n();
-  const { genres } = useGenres();
-  const { openTrailer } = useTrailer();
+  const { subjects } = useSubjects();
   const {
     activeTab,
-    selectedGenre,
+    selectedSubject,
     sortBy,
     yearFrom,
     yearTo,
     scrollMode,
     hasFilters,
     setActiveTab,
-    setSelectedGenre,
+    setSelectedSubject,
     setSortBy,
     setYearFrom,
     setYearTo,
     setScrollMode,
   } = useFilters();
 
-  const [movies, setMovies] = useState([]);
-  const [heroMovie, setHeroMovie] = useState(null);
+  const [books, setBooks] = useState([]);
+  const [trendingBooks, setTrendingBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [trendingMovies, setTrendingMovies] = useState([]);
 
   useEffect(() => {
-    fetchTrending("week").then((data) => {
-      setTrendingMovies(data.results || []);
-      setHeroMovie(data.results?.[0] || null);
+    fetchTrending(1).then((data) => {
+      setTrendingBooks(data.docs || []);
     }).catch(console.error);
   }, []);
 
-  const loadMovies = useCallback(
+  const loadBooks = useCallback(
     async (pageNum, append = false) => {
       setLoading(true);
       try {
-        let data;
-        if (hasFilters) {
-          data = await discoverMovies({
-            page: pageNum,
-            genre: selectedGenre,
-            sortBy,
-            yearFrom,
-            yearTo,
-          });
-        } else {
-          data = await fetchMoviesByCategory(activeTab, pageNum);
-        }
+        const searchQuery = hasFilters || activeTab !== "popular"
+          ? activeTab === "popular" ? "" : activeTab
+          : "";
 
-        setMovies((prev) => (append ? [...prev, ...(data.results || [])] : data.results || []));
-        setTotalPages(data.total_pages || 1);
+        const data = await searchBooks(searchQuery, {
+          page: pageNum,
+          limit: 20,
+          sort: sortBy,
+          yearFrom,
+          yearTo,
+          subject: selectedSubject || (activeTab !== "popular" ? activeTab : ""),
+        });
+
+        setBooks((prev) => (append ? [...prev, ...(data.docs || [])] : data.docs || []));
+        setTotalPages(Math.ceil((data.numFound || 0) / 20) || 1);
         setPage(pageNum);
       } catch (err) {
         console.error(err);
@@ -68,19 +65,19 @@ export default function Home() {
         setLoading(false);
       }
     },
-    [activeTab, hasFilters, selectedGenre, sortBy, yearFrom, yearTo]
+    [activeTab, hasFilters, selectedSubject, sortBy, yearFrom, yearTo]
   );
 
   useEffect(() => {
     setPage(1);
-    loadMovies(1, false);
-  }, [loadMovies]);
+    loadBooks(1, false);
+  }, [loadBooks]);
 
   const loadMore = useCallback(() => {
     if (!loading && page < totalPages) {
-      loadMovies(page + 1, true);
+      loadBooks(page + 1, true);
     }
-  }, [loading, page, totalPages, loadMovies]);
+  }, [loading, page, totalPages, loadBooks]);
 
   const lastElementRef = useInfiniteScroll(
     loadMore,
@@ -88,31 +85,28 @@ export default function Home() {
     loading
   );
 
-  const handleTrailerClick = (movieId) => {
-    const id = movieId || heroMovie?.id;
-    if (id) openTrailer(id);
-  };
-
   const sortOptions = SORT_OPTIONS.map((opt) => ({
     ...opt,
-    label: opt.value.includes("popularity")
-      ? t("popular")
-      : opt.value.includes("vote_average")
-        ? t("topRated")
-        : t("upcoming"),
+    label: opt.value === "relevance"
+      ? "Relevance"
+      : opt.value === "new"
+        ? t("upcoming")
+        : opt.value === "old"
+          ? "Oldest"
+          : t("topRated"),
   }));
 
   return (
     <div className="min-h-screen bg-background">
-      <TrendingSlider movies={trendingMovies} onTrailerClick={handleTrailerClick} />
+      <TrendingSlider books={trendingBooks} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
-        <TabBar tabs={MOVIE_TABS} activeTab={activeTab} onTabChange={setActiveTab} />
+        <TabBar tabs={BOOK_TABS} activeTab={activeTab} onTabChange={setActiveTab} />
 
-        <MovieFilters
-          genres={genres}
-          selectedGenre={selectedGenre}
-          onGenreChange={setSelectedGenre}
+        <BookFilters
+          subjects={subjects}
+          selectedSubject={selectedSubject}
+          onSubjectChange={setSelectedSubject}
           sortBy={sortBy}
           onSortChange={setSortBy}
           yearFrom={yearFrom}
@@ -124,14 +118,14 @@ export default function Home() {
           sortOptions={sortOptions}
         />
 
-        <MovieGrid
-          movies={movies}
+        <BookGrid
+          books={books}
           loading={loading}
           lastElementRef={lastElementRef}
           scrollMode={scrollMode}
           page={page}
           totalPages={totalPages}
-          onPageChange={(p) => loadMovies(p, false)}
+          onPageChange={(p) => loadBooks(p, false)}
         />
       </div>
     </div>

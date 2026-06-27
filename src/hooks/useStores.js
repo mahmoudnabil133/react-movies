@@ -2,8 +2,7 @@ import { useAuthStore } from '../stores/authStore';
 import { useWishlistStore } from '../stores/wishlistStore';
 import { useI18nStore } from '../stores/i18nStore';
 import { useFiltersStore } from '../stores/filtersStore';
-import { useGenresStore } from '../stores/genresStore';
-import { useTrailerStore } from '../stores/trailerStore';
+import { useSubjectsStore } from '../stores/subjectsStore';
 import { LANGUAGES } from '../lib/constants';
 
 export function useAuth() {
@@ -40,13 +39,13 @@ export function useI18n() {
 
 export function useFilters() {
   const activeTab = useFiltersStore((s) => s.activeTab);
-  const selectedGenre = useFiltersStore((s) => s.selectedGenre);
+  const selectedSubject = useFiltersStore((s) => s.selectedSubject);
   const sortBy = useFiltersStore((s) => s.sortBy);
   const yearFrom = useFiltersStore((s) => s.yearFrom);
   const yearTo = useFiltersStore((s) => s.yearTo);
   const scrollMode = useFiltersStore((s) => s.scrollMode);
   const setActiveTab = useFiltersStore((s) => s.setActiveTab);
-  const setSelectedGenre = useFiltersStore((s) => s.setSelectedGenre);
+  const setSelectedSubject = useFiltersStore((s) => s.setSelectedSubject);
   const setSortBy = useFiltersStore((s) => s.setSortBy);
   const setYearFrom = useFiltersStore((s) => s.setYearFrom);
   const setYearTo = useFiltersStore((s) => s.setYearTo);
@@ -54,18 +53,18 @@ export function useFilters() {
   const resetFilters = useFiltersStore((s) => s.resetFilters);
 
   const hasFilters =
-    selectedGenre || yearFrom || yearTo || sortBy !== 'popularity.desc';
+    selectedSubject || yearFrom || yearTo || sortBy !== 'relevance';
 
   return {
     activeTab,
-    selectedGenre,
+    selectedSubject,
     sortBy,
     yearFrom,
     yearTo,
     scrollMode,
     hasFilters,
     setActiveTab,
-    setSelectedGenre,
+    setSelectedSubject,
     setSortBy,
     setYearFrom,
     setYearTo,
@@ -74,19 +73,12 @@ export function useFilters() {
   };
 }
 
-export function useGenres() {
-  const genres = useGenresStore((s) => s.genres);
-  const isLoading = useGenresStore((s) => s.isLoading);
-  const loadGenres = useGenresStore((s) => s.loadGenres);
+export function useSubjects() {
+  const subjects = useSubjectsStore((s) => s.subjects);
+  const isLoading = useSubjectsStore((s) => s.isLoading);
+  const loadSubjects = useSubjectsStore((s) => s.loadSubjects);
 
-  return { genres, isLoading, loadGenres };
+  return { subjects, isLoading, loadSubjects };
 }
 
-export function useTrailer() {
-  const videoKey = useTrailerStore((s) => s.videoKey);
-  const isOpen = useTrailerStore((s) => s.isOpen);
-  const openTrailer = useTrailerStore((s) => s.openTrailer);
-  const closeTrailer = useTrailerStore((s) => s.closeTrailer);
-
-  return { videoKey, isOpen, openTrailer, closeTrailer };
-}
+export { useAuthStore, useWishlistStore, useI18nStore, useFiltersStore, useSubjectsStore };

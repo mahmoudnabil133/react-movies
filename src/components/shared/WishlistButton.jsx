@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useAuth, useWishlist, useI18n } from "../../hooks/useStores";
 import { toast } from "../../lib/toast";
 
-export default function WishlistButton({ movie, variant = "default" }) {
+export default function WishlistButton({ book, variant = "default" }) {
   const { user } = useAuth();
   const { wishlist, isInWishlist, toggleWishlist } = useWishlist();
   const { t } = useI18n();
   const [blockedMessage, setBlockedMessage] = useState("");
-  const active = isInWishlist(movie.id);
+  const item = book;
+  const itemId = book.key?.replace("/works/", "") || book._id;
+  const active = isInWishlist(itemId);
   const canAddMore = user || wishlist.length < 2;
   const isBlocked = !active && !canAddMore;
 
@@ -36,9 +38,8 @@ export default function WishlistButton({ movie, variant = "default" }) {
     e.preventDefault();
     e.stopPropagation();
 
-    // Check if user is trying to add to wishlist without being logged in
     if (!user && !active) {
-      toast.error("Please login to add movies to your wishlist");
+      toast.error("Please login to add books to your wishlist");
       return;
     }
 
@@ -49,12 +50,12 @@ export default function WishlistButton({ movie, variant = "default" }) {
     setBlockedMessage("");
 
     try {
-      const success = await toggleWishlist(movie);
+      const success = await toggleWishlist(item);
       if (success) {
         if (active) {
-          toast.success(`"${movie.title}" removed from wishlist`);
+          toast.success(`"${book.title}" removed from wishlist`);
         } else {
-          toast.success(`"${movie.title}" added to wishlist`);
+          toast.success(`"${book.title}" added to wishlist`);
         }
       } else {
         toast.error("Login to save more than 2 wishlist items.");

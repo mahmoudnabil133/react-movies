@@ -1,32 +1,32 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router";
-import { searchMovies, discoverMovies } from "../api/tmdb";
+import { searchBooks } from "../api/openlibrary";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
-import { useI18n, useFilters, useGenres } from "../hooks/useStores";
+import { useI18n, useFilters, useSubjects } from "../hooks/useStores";
 import { SORT_OPTIONS } from "../lib/constants";
 import SearchBar from "../components/search/SearchBar";
-import MovieFilters from "../components/movies/MovieFilters";
-import MovieGrid from "../components/movies/MovieGrid";
+import BookFilters from "../components/books/BookFilters";
+import BookGrid from "../components/books/BookGrid";
 
 export default function Search() {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
   const { t } = useI18n();
-  const { genres } = useGenres();
+  const { subjects } = useSubjects();
   const {
-    selectedGenre,
+    selectedSubject,
     sortBy,
     yearFrom,
     yearTo,
     scrollMode,
-    setSelectedGenre,
+    setSelectedSubject,
     setSortBy,
     setYearFrom,
     setYearTo,
     setScrollMode,
   } = useFilters();
 
-  const [movies, setMovies] = useState([]);
+  const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -34,33 +34,22 @@ export default function Search() {
   const loadResults = useCallback(
     async (pageNum, append = false) => {
       if (!query.trim()) {
-        setMovies([]);
+        setBooks([]);
         return;
       }
       setLoading(true);
       try {
-        let data;
-        const hasFilters = selectedGenre || yearFrom || yearTo || sortBy !== "popularity.desc";
+        const data = await searchBooks(query, {
+          page: pageNum,
+          limit: 20,
+          sort: sortBy,
+          yearFrom,
+          yearTo,
+          subject: selectedSubject,
+        });
 
-        if (hasFilters) {
-          data = await discoverMovies({
-            page: pageNum,
-            genre: selectedGenre,
-            sortBy,
-            yearFrom,
-            yearTo,
-          });
-          if (query) {
-            data.results = data.results?.filter((m) =>
-              m.title?.toLowerCase().includes(query.toLowerCase())
-            );
-          }
-        } else {
-          data = await searchMovies(query, pageNum);
-        }
-
-        setMovies((prev) => (append ? [...prev, ...(data.results || [])] : data.results || []));
-        setTotalPages(data.total_pages || 1);
+        setBooks((prev) => (append ? [...prev, ...(data.docs || [])] : data.docs || []));
+        setTotalPages(Math.ceil((data.numFound || 0) / 20) || 1);
         setPage(pageNum);
       } catch (err) {
         console.error(err);
@@ -68,13 +57,13 @@ export default function Search() {
         setLoading(false);
       }
     },
-    [query, selectedGenre, sortBy, yearFrom, yearTo]
+    [query, selectedSubject, sortBy, yearFrom, yearTo]
   );
 
   useEffect(() => {
     setPage(1);
     loadResults(1, false);
-  }, [query, selectedGenre, sortBy, yearFrom, yearTo, scrollMode]);
+  }, [query, selectedSubject, sortBy, yearFrom, yearTo, scrollMode]);
 
   const loadMore = useCallback(() => {
     if (!loading && page < totalPages) loadResults(page + 1, true);
@@ -88,11 +77,13 @@ export default function Search() {
 
   const sortOptions = SORT_OPTIONS.map((opt) => ({
     ...opt,
-    label: opt.value.includes("popularity")
-      ? t("popular")
-      : opt.value.includes("vote_average")
-        ? t("topRated")
-        : t("upcoming"),
+    label: opt.value === "relevance"
+      ? "Relevance"
+      : opt.value === "new"
+        ? t("upcoming")
+        : opt.value === "old"
+          ? "Oldest"
+          : t("topRated"),
   }));
 
   return (
@@ -108,10 +99,10 @@ export default function Search() {
           </h1>
         )}
 
-        <MovieFilters
-          genres={genres}
-          selectedGenre={selectedGenre}
-          onGenreChange={setSelectedGenre}
+        <BookFilters
+          subjects={subjects}
+          selectedSubject={selectedSubject}
+          onSubjectChange={setSelectedSubject}
           sortBy={sortBy}
           onSortChange={setSortBy}
           yearFrom={yearFrom}
@@ -123,8 +114,8 @@ export default function Search() {
           sortOptions={sortOptions}
         />
 
-        <MovieGrid
-          movies={movies}
+        <BookGrid
+          books={books}
           loading={loading}
           lastElementRef={lastElementRef}
           scrollMode={scrollMode}

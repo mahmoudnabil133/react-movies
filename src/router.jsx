@@ -5,7 +5,7 @@ import About from "./pages/About.jsx";
 import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/LoginPage.jsx";
 import SignupPage from "./pages/SignupPage.jsx";
-import MovieDetails from "./pages/MovieDetails.jsx";
+import BookDetails from "./pages/BookDetails.jsx";
 import Search from "./pages/Search.jsx";
 import Wishlist from "./pages/Wishlist.jsx";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -33,8 +33,8 @@ const router = createBrowserRouter([
         element: <SignupPage />,
       },
       {
-        path: "movie/:id",
-        element: <MovieDetails />,
+        path: "book/:id",
+        element: <BookDetails />,
       },
       {
         path: "search",

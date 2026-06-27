@@ -45,7 +45,7 @@ const Navbar = () => {
 
   const navLinks = [
     { to: "/", label: t("home"), active: pathname === "/" },
-    { to: "/search", label: t("movies"), active: pathname === "/search" },
+    { to: "/search", label: t("books"), active: pathname === "/search" },
     ...(user
       ? [
           {
@@ -62,14 +62,11 @@ const Navbar = () => {
     <>
       <nav className="fixed top-0 start-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2 flex items-center gap-2 sm:gap-4">
-          <Link to="/" className="flex items-center shrink-0">
+          <Link to="/" className="flex items-center shrink-0 group/logo">
             <img
-              src="/movie_best-logo-1.png"
-              alt="Movie Best"
-              className="h-8 sm:h-9 w-auto"
-              onError={(e) => {
-                e.target.style.display = "none";
-              }}
+              src="/high-level-description-a-modern-minimali_R1Fcg0AMU8m3IMwmRu59PQ_0v0q6sR6SKWlE1FTAb17RA__1_-removebg-preview.png"
+              alt="BookStore"
+              className="h-8 sm:h-9 w-auto transition-transform duration-300 group-hover/logo:scale-110 group-hover/logo:rotate-2"
             />
           </Link>
 
@@ -131,7 +128,7 @@ const Navbar = () => {
             <button
               type="button"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="w-9 h-9 rounded-lg border border-border/50 flex items-center justify-center transition-all hover:border-border active:scale-95"
+              className="w-9 h-9 rounded-lg border border-border/50 flex items-center justify-center transition-all duration-300 hover:border-blue-500/40 hover:shadow-lg hover:shadow-blue-500/10 hover:scale-110 active:scale-95"
               aria-label="Toggle theme"
             >
               {theme === "dark" ? (
@@ -156,7 +153,7 @@ const Navbar = () => {
                     logout();
                     toast.success("Logged out");
                   }}
-                  className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-500 transition-all active:scale-95"
+                  className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-500 transition-all duration-300 hover:bg-red-500/10 hover:scale-105 active:scale-95"
                 >
                   {t("logout")}
                 </button>
@@ -165,13 +162,13 @@ const Navbar = () => {
               <div className="hidden sm:flex items-center gap-1.5 ps-1.5 border-s border-border/50">
                 <Link
                   to="/login"
-                  className="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium text-foreground transition-all active:scale-95"
+                  className="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium text-foreground transition-all duration-300 hover:bg-accent hover:scale-105 active:scale-95"
                 >
                   {t("login")}
                 </Link>
                 <Link
                   to="/signup"
-                  className="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium border border-border/50 text-foreground transition-all active:scale-95"
+                  className="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium border border-border/50 text-foreground transition-all duration-300 hover:bg-accent hover:border-blue-500/40 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/10 active:scale-95"
                 >
                   {t("signup")}
                 </Link>

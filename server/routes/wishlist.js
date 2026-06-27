@@ -9,9 +9,9 @@ router.get("/wishlist", authMiddleware, async (req, res) => {
 });
 
 router.post("/wishlist/:id", authMiddleware, async (req, res) => {
-    const id = Number(req.params.id);
+    const id = req.params.id;
     if (!id) {
-        return res.status(400).json({ message: "Invalid movie id" });
+        return res.status(400).json({ message: "Invalid book id" });
     }
 
     if (!req.user.wishlist.includes(id)) {
@@ -23,9 +23,9 @@ router.post("/wishlist/:id", authMiddleware, async (req, res) => {
 });
 
 router.delete("/wishlist/:id", authMiddleware, async (req, res) => {
-    const id = Number(req.params.id);
+    const id = req.params.id;
     if (!id) {
-        return res.status(400).json({ message: "Invalid movie id" });
+        return res.status(400).json({ message: "Invalid book id" });
     }
 
     req.user.wishlist = (req.user.wishlist || []).filter((item) => item !== id);

@@ -1,9 +1,9 @@
 import { useI18n } from "../../hooks/useStores";
 
-export default function MovieFilters({
-  genres,
-  selectedGenre,
-  onGenreChange,
+export default function BookFilters({
+  subjects,
+  selectedSubject,
+  onSubjectChange,
   sortBy,
   onSortChange,
   yearFrom,
@@ -24,12 +24,12 @@ export default function MovieFilters({
     <div className="p-3 sm:p-4 rounded-xl bg-card/80 border border-border backdrop-blur-sm space-y-4">
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         <div className="flex flex-col gap-1.5 col-span-2 sm:col-span-1 min-w-0">
-          <label className="text-xs text-muted-foreground font-medium">{t("genre")}</label>
-          <select value={selectedGenre} onChange={(e) => onGenreChange(e.target.value)} className={fieldClass}>
-            <option value="">{t("allGenres")}</option>
-            {genres.map((g) => (
-              <option key={g.id} value={g.id}>
-                {g.name}
+          <label className="text-xs text-muted-foreground font-medium">{t("subject")}</label>
+          <select value={selectedSubject} onChange={(e) => onSubjectChange(e.target.value)} className={fieldClass}>
+            <option value="">{t("allSubjects")}</option>
+            {subjects.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
               </option>
             ))}
           </select>
@@ -50,11 +50,11 @@ export default function MovieFilters({
           <label className="text-xs text-muted-foreground font-medium">{t("yearFrom")}</label>
           <input
             type="number"
-            min="1900"
+            min="1400"
             max={currentYear}
             value={yearFrom}
             onChange={(e) => onYearFromChange(e.target.value)}
-            placeholder="1900"
+            placeholder="1400"
             className={fieldClass}
           />
         </div>
@@ -63,7 +63,7 @@ export default function MovieFilters({
           <label className="text-xs text-muted-foreground font-medium">{t("yearTo")}</label>
           <input
             type="number"
-            min="1900"
+            min="1400"
             max={currentYear + 5}
             value={yearTo}
             onChange={(e) => onYearToChange(e.target.value)}

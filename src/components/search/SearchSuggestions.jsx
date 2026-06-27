@@ -1,4 +1,4 @@
-import { getImageUrl, formatRating } from "../../lib/formatters";
+import { getCoverUrl, formatRating } from "../../lib/formatters";
 import { useI18n } from "../../hooks/useStores";
 
 export default function SearchSuggestions({ suggestions, loading, query, onSelect, onSearchAll }) {
@@ -12,21 +12,22 @@ export default function SearchSuggestions({ suggestions, loading, query, onSelec
         <div className="p-4 text-center text-muted-foreground text-sm">{t("noResults")}</div>
       ) : (
         <>
-          {suggestions.map((movie) => (
+          {suggestions.map((book) => (
             <button
-              key={movie.id}
-              onClick={() => onSelect(movie)}
+              key={book.key}
+              onClick={() => onSelect(book)}
               className="w-full flex items-center gap-3 p-3 hover:bg-accent transition-colors text-start"
             >
               <img
-                src={getImageUrl(movie.poster_path, "w92")}
-                alt={movie.title}
+                src={getCoverUrl(book.cover_i, "S")}
+                alt={book.title}
                 className="w-10 h-14 object-cover rounded"
               />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">{movie.title}</p>
+                <p className="text-sm font-medium text-foreground truncate">{book.title}</p>
                 <p className="text-xs text-muted-foreground">
-                  {movie.release_date?.slice(0, 4)} · ★ {formatRating(movie.vote_average)}
+                  {book.first_publish_year}
+                  {book.ratings_average > 0 && ` · ★ ${formatRating(book.ratings_average)}`}
                 </p>
               </div>
             </button>

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useI18n } from "../../hooks/useStores";
-import { searchMovies } from "../../api/tmdb";
+import { searchBooks } from "../../api/openlibrary";
 import { useDebounce } from "../../hooks/useDebounce";
 import SearchSuggestions from "./SearchSuggestions";
 import { cn } from "@/lib/utils";
@@ -29,9 +29,9 @@ export default function SearchBar({
 
     let cancelled = false;
     setLoading(true);
-    searchMovies(debouncedQuery, 1)
+    searchBooks(debouncedQuery, { limit: 6 })
       .then((data) => {
-        if (!cancelled) setSuggestions(data.results?.slice(0, 6) || []);
+        if (!cancelled) setSuggestions(data.docs || []);
       })
       .catch(() => {
         if (!cancelled) setSuggestions([]);
@@ -98,8 +98,9 @@ export default function SearchBar({
           suggestions={suggestions}
           loading={loading}
           query={query}
-          onSelect={(movie) => {
-            navigate(`/movie/${movie.id}`);
+          onSelect={(book) => {
+            const workId = book.key?.replace("/works/", "");
+            navigate(`/book/${workId}`);
             setOpen(false);
           }}
           onSearchAll={() => {

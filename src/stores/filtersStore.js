@@ -4,32 +4,32 @@ import { persist } from 'zustand/middleware';
 export const useFiltersStore = create(
   persist(
     (set) => ({
-      activeTab: 'now_playing',
-      selectedGenre: '',
-      sortBy: 'popularity.desc',
+      activeTab: 'popular',
+      selectedSubject: '',
+      sortBy: 'relevance',
       yearFrom: '',
       yearTo: '',
       scrollMode: 'infinite',
 
       setActiveTab: (activeTab) => set({ activeTab }),
-      setSelectedGenre: (selectedGenre) => set({ selectedGenre }),
+      setSelectedSubject: (selectedSubject) => set({ selectedSubject }),
       setSortBy: (sortBy) => set({ sortBy }),
       setYearFrom: (yearFrom) => set({ yearFrom }),
       setYearTo: (yearTo) => set({ yearTo }),
       setScrollMode: (scrollMode) => set({ scrollMode }),
       resetFilters: () =>
         set({
-          selectedGenre: '',
-          sortBy: 'popularity.desc',
+          selectedSubject: '',
+          sortBy: 'relevance',
           yearFrom: '',
           yearTo: '',
         }),
     }),
     {
-      name: 'movie-filters',
+      name: 'book-filters',
       partialize: (state) => ({
         activeTab: state.activeTab,
-        selectedGenre: state.selectedGenre,
+        selectedSubject: state.selectedSubject,
         sortBy: state.sortBy,
         yearFrom: state.yearFrom,
         yearTo: state.yearTo,

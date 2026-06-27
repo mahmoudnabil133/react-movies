@@ -1,10 +1,9 @@
 import { create } from 'zustand';
 import { getWishlist, addWishlistItem, removeWishlistItem } from '../api/wishlist';
-import { fetchMovieDetails } from '../api/tmdb';
 import { useAuthStore } from './authStore';
 
 const ANON_WISHLIST_LIMIT = 2;
-const ANON_STORAGE_KEY = 'movie-wishlist:anon';
+const ANON_STORAGE_KEY = 'book-wishlist:anon';
 
 function loadLocalWishlist(key) {
   try {
@@ -28,7 +27,7 @@ export const useWishlistStore = create((set, get) => ({
   initializeWishlist: async () => {
     const { user, token } = useAuthStore.getState();
     const storageKey = user && (user.id || user.email)
-      ? `movie-wishlist:${user.id || user.email}`
+      ? `book-wishlist:${user.id || user.email}`
       : ANON_STORAGE_KEY;
 
     set({ isLoading: true });
@@ -37,26 +36,15 @@ export const useWishlistStore = create((set, get) => ({
         try {
           const data = await getWishlist(token);
           const ids = data?.wishlist || [];
-          const localMovies = loadLocalWishlist(storageKey);
-          const localById = Object.fromEntries(localMovies.map((movie) => [movie.id, movie]));
+          const localBooks = loadLocalWishlist(storageKey);
+          const localByKey = Object.fromEntries(localBooks.map((book) => [book._id, book]));
 
-          const movies = await Promise.all(
-            ids.map(async (id) => {
-              if (localById[id]) return localById[id];
-              try {
-                const details = await fetchMovieDetails(id);
-                return {
-                  id: details.id,
-                  title: details.title,
-                  poster_path: details.poster_path,
-                };
-              } catch {
-                return null;
-              }
-            })
-          );
+          const books = ids.map((id) => {
+            if (localByKey[id]) return localByKey[id];
+            return { _id: id, title: id, cover_i: null };
+          });
 
-          const filtered = movies.filter(Boolean);
+          const filtered = books.filter(Boolean);
           set({ wishlist: filtered, isLoading: false });
           saveLocalWishlist(storageKey, filtered);
         } catch {
@@ -74,30 +62,39 @@ export const useWishlistStore = create((set, get) => ({
   },
 
   isInWishlist: (id) => {
-    return get().wishlist.some((m) => m.id === id);
+    return get().wishlist.some((b) => b._id === id);
   },
 
-  addToWishlist: async (movie) => {
+  addToWishlist: async (book) => {
     const { user, token } = useAuthStore.getState();
+    const id = book.key?.replace("/works/", "") || book._id;
     const storageKey = user && (user.id || user.email)
-      ? `movie-wishlist:${user.id || user.email}`
+      ? `book-wishlist:${user.id || user.email}`
       : ANON_STORAGE_KEY;
 
-    if (get().isInWishlist(movie.id)) return true;
+    if (get().isInWishlist(id)) return true;
+
+    const newBook = {
+      _id: id,
+      title: book.title,
+      cover_i: book.cover_i,
+      first_publish_year: book.first_publish_year,
+      author_name: book.author_name,
+      ratings_average: book.ratings_average,
+      subject: book.subject,
+    };
 
     if (!user) {
       if (get().wishlist.length >= ANON_WISHLIST_LIMIT) return false;
-      const newMovie = { id: movie.id, title: movie.title, poster_path: movie.poster_path };
-      const updated = [...get().wishlist, newMovie];
+      const updated = [...get().wishlist, newBook];
       set({ wishlist: updated });
       saveLocalWishlist(storageKey, updated);
       return true;
     }
 
     try {
-      await addWishlistItem(movie.id, token);
-      const newMovie = { id: movie.id, title: movie.title, poster_path: movie.poster_path };
-      const updated = [...get().wishlist, newMovie];
+      await addWishlistItem(id, token);
+      const updated = [...get().wishlist, newBook];
       set({ wishlist: updated });
       saveLocalWishlist(storageKey, updated);
       return true;
@@ -110,7 +107,7 @@ export const useWishlistStore = create((set, get) => ({
   removeFromWishlist: async (id) => {
     const { user, token } = useAuthStore.getState();
     const storageKey = user && (user.id || user.email)
-      ? `movie-wishlist:${user.id || user.email}`
+      ? `book-wishlist:${user.id || user.email}`
       : ANON_STORAGE_KEY;
 
     if (!get().isInWishlist(id)) return true;
@@ -123,17 +120,18 @@ export const useWishlistStore = create((set, get) => ({
       }
     }
 
-    const updated = get().wishlist.filter((m) => m.id !== id);
+    const updated = get().wishlist.filter((b) => b._id !== id);
     set({ wishlist: updated });
     saveLocalWishlist(storageKey, updated);
     return true;
   },
 
-  toggleWishlist: async (movie) => {
-    if (get().isInWishlist(movie.id)) {
-      return get().removeFromWishlist(movie.id);
+  toggleWishlist: async (book) => {
+    const id = book.key?.replace("/works/", "") || book._id;
+    if (get().isInWishlist(id)) {
+      return get().removeFromWishlist(id);
     }
-    return get().addToWishlist(movie);
+    return get().addToWishlist(book);
   },
 
   clearWishlist: () => {

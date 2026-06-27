@@ -1,32 +1,49 @@
-export function formatRuntime(minutes) {
-  if (!minutes) return "N/A";
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return h ? `${h}h ${m}m` : `${m}m`;
+import { OL_COVER_BASE, COVER_SIZE_LARGE, COVER_SIZE_MEDIUM, COVER_SIZE_SMALL, PLACEHOLDER_COVER } from "./constants";
+
+export function formatRating(rating) {
+  if (!rating || rating === 0) return "N/A";
+  return Number(rating).toFixed(1);
 }
 
-export function formatRating(vote) {
-  return vote ? vote.toFixed(1) : "N/A";
-}
-
-export function formatVoteCount(count) {
+export function formatRatingCount(count) {
   if (!count) return "0";
   if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
   return count.toString();
 }
 
-export function formatYear(dateStr) {
-  if (!dateStr) return "N/A";
-  return new Date(dateStr).getFullYear();
+export function formatYear(year) {
+  return year || "N/A";
 }
 
-export function getImageUrl(path, size = "w500") {
-  if (!path) return "/placeholder-poster.svg";
-  return `https://image.tmdb.org/t/p/${size}${path}`;
+export function getCoverUrl(coverId, size = COVER_SIZE_MEDIUM) {
+  if (!coverId && coverId !== 0) return PLACEHOLDER_COVER;
+  return `${OL_COVER_BASE}/id/${coverId}-${size}.jpg`;
+}
+
+export function getOLIDCoverUrl(olid, size = COVER_SIZE_MEDIUM) {
+  if (!olid) return PLACEHOLDER_COVER;
+  return `${OL_COVER_BASE}/olid/${olid}-${size}.jpg`;
 }
 
 export function truncateText(text, maxLength = 200) {
   if (!text) return "";
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength).trim() + "…";
+}
+
+export function getDescription(work) {
+  if (!work?.description) return "";
+  if (typeof work.description === "string") return work.description;
+  if (work.description?.value) return work.description.value;
+  return "";
+}
+
+export function formatPageCount(pages) {
+  if (!pages) return null;
+  return `${pages} pages`;
+}
+
+export function getWorkId(key) {
+  if (!key) return "";
+  return key.replace("/works/", "");
 }

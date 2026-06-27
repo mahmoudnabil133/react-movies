@@ -8,7 +8,7 @@ import "./index.css";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <StoreInitializer>
-      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="movie-theme">
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="bookstore-theme">
         <App />
       </ThemeProvider>
     </StoreInitializer>
